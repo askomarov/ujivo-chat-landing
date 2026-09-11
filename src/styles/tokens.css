@@ -4,46 +4,50 @@
 	/* Нужно, чтобы block-size: auto анимировался в ::details-content (FAQ). */
 	interpolate-size: allow-keywords;
 
-	/* Поверхности */
-	--bg: #ffffff;
-	--bg-alt: #f8f9fc;
-	--bg-dark: #1a1b2e;
-	--surface: #ffffff;
-	--surface-2: #f4f5f9;
-	--border: #e4e6ef;
-	--border-hover: #c8cad8;
+	/* Поверхности: тёплый фарфор вместо стерильного белого */
+	--bg: #fbf7f5;
+	--bg-alt: #f4ecea;
+	--bg-dark: #240d14;
+	--surface: #fffaf8;
+	--surface-2: #f1e5e3;
+	--border: #e3d1d1;
+	--border-hover: #c9aaad;
 
 	/* Текст */
-	--text: #1a1b2e;
-	--text-dim: #5c5f72;
-	--text-mute: #9499ad;
+	--text: #2b191e;
+	--text-dim: #6d555c;
+	--text-mute: #987e85;
 
 	/* Бренд */
-	--primary: #4f46e5;
-	--primary-light: #6366f1;
-	--primary-dim: #eef0fd;
-	--primary-hover: #4338ca;
-	--primary-border: #dfe1f5;
+	--primary: #8e2f49;
+	--primary-solid: #8e2f49;
+	--primary-light: #b44865;
+	--primary-dim: #f5e2e7;
+	--primary-hover: #74223a;
+	--primary-border: #e8c3cc;
 	--accent-tg: #2aabee;
 	--accent-tg-light: #e8f6fe;
-	--success: #10b981;
+	--success: #168563;
 
 	/* Токенизированные из reference захардкоженные цвета */
-	--header-bg: rgba(255, 255, 255, 0.88);
-	--menu-bg: rgba(255, 255, 255, 0.97);
-	--placeholder: #dfe1ef;
-	--bubble-visitor-bg: #1a1b2e;
+	--header-bg: rgba(251, 247, 245, 0.88);
+	--menu-bg: rgba(251, 247, 245, 0.97);
+	--placeholder: #deced1;
+	--bubble-visitor-bg: #35161f;
 	--bubble-visitor-text: #ffffff;
-	--tg-screen-bg: #eef1f6;
-	--code-text: #a5b4fc;
-	--grid-line: rgba(79, 70, 229, 0.04);
+	--tg-screen-bg: #eee8e8;
+	--code-text: #efafbf;
+	--grid-line: rgba(142, 47, 73, 0.06);
 
-	/* Фактура (noise из стартера, нейтральная к палитре) */
+	/* Фактура и атмосферные фоновые пятна */
 	--noise-layer: url('/assets/backgrounds/noise.png') top center / 220px repeat;
-	--noise-blend: overlay;
+	--noise-blend: multiply;
+	--grain-opacity: 0.16;
+	--cherry-glow: rgba(142, 47, 73, 0.12);
+	--cherry-glow-strong: rgba(142, 47, 73, 0.24);
 
 	/* Акцент на тёмных плашках, где --primary не читается */
-	--accent-on-dark: #a5b4fc;
+	--accent-on-dark: #e78ca2;
 
 	/* Градиенты только служебные: обводка пилюли и подложка навигации.
 	   Двухцветных indigo → cyan заливок нет намеренно. */
@@ -69,7 +73,7 @@
 	--shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 	--shadow-md: 0 6px 20px rgba(0, 0, 0, 0.07);
 	--shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.12);
-	--shadow-primary: 0 8px 28px rgba(79, 70, 229, 0.28);
+	--shadow-primary: 0 8px 28px rgba(142, 47, 73, 0.3);
 	--shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.15);
 
 	--theme-transition: 0.25s ease-in-out;
@@ -78,44 +82,48 @@
 :root.theme-dark {
 	color-scheme: dark;
 
-	--bg: #0e0f1a;
-	--bg-alt: #14162a;
-	--bg-dark: #090a14;
-	--surface: #191b30;
-	--surface-2: #21243c;
-	--border: #2c3050;
-	--border-hover: #3d4268;
+	--bg: #10090b;
+	--bg-alt: #180d11;
+	--bg-dark: #090507;
+	--surface: #1f1115;
+	--surface-2: #2a171d;
+	--border: #44252e;
+	--border-hover: #653542;
 
-	--text: #eef0f8;
-	--text-dim: #a6abc4;
-	--text-mute: #757b96;
+	--text: #f5ebed;
+	--text-dim: #c6adb4;
+	--text-mute: #987a83;
 
-	--primary: #6366f1;
-	--primary-light: #818cf8;
-	--primary-dim: #1e1f45;
-	--primary-hover: #7c7ff5;
-	--primary-border: #333670;
+	--primary: #de7b94;
+	--primary-solid: #96304d;
+	--primary-light: #f09ab0;
+	--primary-dim: #32131d;
+	--primary-hover: #ad3d5b;
+	--primary-border: #653042;
 	--accent-tg: #37b3f0;
 	--accent-tg-light: #12293b;
 
-	--header-bg: rgba(14, 15, 26, 0.85);
-	--menu-bg: rgba(14, 15, 26, 0.97);
-	--placeholder: #262a47;
-	--bubble-visitor-bg: #6366f1;
+	--header-bg: rgba(16, 9, 11, 0.86);
+	--menu-bg: rgba(16, 9, 11, 0.97);
+	--placeholder: #3a2229;
+	--bubble-visitor-bg: #96304d;
 	--bubble-visitor-text: #ffffff;
-	--tg-screen-bg: #10121f;
-	--code-text: #a5b4fc;
-	--grid-line: rgba(129, 140, 248, 0.09);
+	--tg-screen-bg: #160d10;
+	--code-text: #efafbf;
+	--grid-line: rgba(222, 123, 148, 0.1);
 
 	--noise-blend: soft-light;
+	--grain-opacity: 0.22;
+	--cherry-glow: rgba(174, 55, 86, 0.16);
+	--cherry-glow-strong: rgba(190, 61, 94, 0.3);
 
-	--accent-on-dark: #a5b4fc;
+	--accent-on-dark: #ed91a8;
 	--gradient-pill: radial-gradient(var(--surface-2), var(--surface) 150%);
 
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
 	--shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
 	--shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
 	--shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.55);
-	--shadow-primary: 0 8px 28px rgba(99, 102, 241, 0.35);
+	--shadow-primary: 0 8px 30px rgba(150, 48, 77, 0.45);
 	--shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.6);
 }

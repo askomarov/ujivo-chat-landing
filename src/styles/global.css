@@ -20,6 +20,7 @@ body {
 	font-family: var(--font-body);
 	background-color: var(--bg);
 	color: var(--text);
+	accent-color: var(--primary-solid);
 	line-height: 1.6;
 	overflow-x: hidden;
 	-webkit-font-smoothing: antialiased;
@@ -61,14 +62,18 @@ p {
 	text-wrap: pretty;
 }
 
-/* ===== ФАКТУРА ===== */
+/* ===== СТРАНИЦА ===== */
 .page {
-	background: var(--noise-layer), var(--bg);
-	background-blend-mode: var(--noise-blend), normal;
+	background: var(--bg);
 
 	> main {
 		flex: 1;
 	}
+}
+
+::selection {
+	background: var(--primary-solid);
+	color: #fff;
 }
 
 /* ===== УТИЛИТЫ ===== */
@@ -141,9 +146,9 @@ p {
 }
 
 .btn-primary {
-	background: var(--primary);
+	background: var(--primary-solid);
 	color: #fff;
-	box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+	box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-solid) 36%, transparent);
 }
 
 .btn-primary:hover {
@@ -181,11 +186,15 @@ summary:focus-visible {
 
 .section-alt {
 	max-width: none;
-	background-color: var(--bg-alt);
+	background:
+		var(--noise-layer),
+		radial-gradient(circle at 12% 18%, var(--cherry-glow), transparent 34rem),
+		var(--bg-alt);
+	background-blend-mode: var(--noise-blend), normal, normal;
 	border-top: 1px solid var(--border);
 	border-bottom: 1px solid var(--border);
 	transition:
-		background-color var(--theme-transition),
+		background var(--theme-transition),
 		border-color var(--theme-transition);
 }
 
@@ -336,8 +345,8 @@ summary:focus-visible {
 }
 
 @media (forced-colors: active) {
-	.page {
-		background: none;
+	.section-alt {
+		background: Canvas;
 		background-blend-mode: normal;
 	}
 }

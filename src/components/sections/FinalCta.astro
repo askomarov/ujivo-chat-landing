@@ -27,13 +27,39 @@ const { cta } = Astro.props;
 	}
 
 	.cta-card {
+		position: relative;
+		overflow: hidden;
 		max-width: 640px;
 		margin: 0 auto;
 		text-align: center;
-		background: var(--bg-dark);
+		background:
+			radial-gradient(circle at 82% 12%, var(--cherry-glow-strong), transparent 19rem),
+			radial-gradient(circle at 8% 100%, var(--cherry-glow), transparent 17rem),
+			var(--bg-dark);
+		border: 1px solid color-mix(in srgb, var(--primary-light) 24%, transparent);
 		border-radius: 24px;
 		padding: 3.5rem 2.5rem;
-		transition: background-color var(--theme-transition);
+		box-shadow: var(--shadow-lg);
+		transition:
+			background var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.cta-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--noise-layer);
+		mix-blend-mode: soft-light;
+		opacity: calc(var(--grain-opacity) * 1.5);
+		pointer-events: none;
+		-webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 90%);
+		mask-image: radial-gradient(ellipse at center, #000 20%, transparent 90%);
+	}
+
+	.cta-card > * {
+		position: relative;
+		z-index: 1;
 	}
 
 	.cta-title {

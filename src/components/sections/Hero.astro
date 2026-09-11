@@ -62,6 +62,21 @@ const { t } = Astro.props;
 		position: absolute;
 		inset: 0;
 		z-index: 0;
+		background:
+			radial-gradient(circle at 78% 24%, var(--cherry-glow-strong), transparent 24rem),
+			radial-gradient(circle at 12% 68%, var(--cherry-glow), transparent 28rem);
+	}
+
+	.hero-bg::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--noise-layer);
+		mix-blend-mode: var(--noise-blend);
+		opacity: var(--grain-opacity);
+		pointer-events: none;
+		-webkit-mask-image: radial-gradient(ellipse 90% 80% at 60% 38%, #000 15%, transparent 78%);
+		mask-image: radial-gradient(ellipse 90% 80% at 60% 38%, #000 15%, transparent 78%);
 	}
 
 	.grid-overlay {
