@@ -1,0 +1,40 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import MainHead from '../components/MainHead.astro';
+import { HTML_LANG, useTranslations, type Lang } from '../i18n';
+
+interface Props {
+	lang: Lang;
+	title?: string;
+	description?: string;
+	/** Путь без префикса локали, нужен для canonical и hreflang. */
+	path?: string;
+}
+
+const { lang, title, description, path = '' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<html lang={HTML_LANG[lang]}>
+	<head>
+		<MainHead
+			{lang}
+			{path}
+			title={title ?? t.meta.title}
+			description={description ?? t.meta.description}
+		/>
+	</head>
+	<body class="page">
+		<a class="skip-link" href="#main">{t.a11y.skipToContent}</a>
+		<Header {lang} {path} />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer {lang} />
+
+		<script>
+			import '../scripts/reveal';
+		</script>
+	</body>
+</html>

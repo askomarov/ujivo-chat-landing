@@ -1,0 +1,106 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+	label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<theme-toggle>
+	<button type="button" aria-pressed="false">
+		<span class="sr-only">{label}</span>
+		<span class="icon light"><Icon icon="sun" /></span>
+		<span class="icon dark"><Icon icon="moon" /></span>
+	</button>
+</theme-toggle>
+
+<style>
+	button {
+		position: relative;
+		display: flex;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-pill);
+		padding: 0;
+		background-color: var(--surface);
+		cursor: pointer;
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	button:hover {
+		border-color: var(--border-hover);
+	}
+
+	.icon {
+		z-index: 1;
+		position: relative;
+		display: flex;
+		padding: 0.35rem;
+		width: 1.7rem;
+		height: 1.7rem;
+		font-size: 1rem;
+		color: var(--text-mute);
+	}
+
+	.icon.light::before {
+		content: '';
+		z-index: -1;
+		position: absolute;
+		inset: 0;
+		background: var(--primary);
+		border-radius: var(--radius-pill);
+	}
+
+	:global(.theme-dark) .icon.light::before {
+		transform: translateX(100%);
+	}
+
+	:global(.theme-dark) .icon.dark,
+	:global(html:not(.theme-dark)) .icon.light {
+		color: #fff;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.icon,
+		.icon.light::before {
+			transition:
+				transform var(--theme-transition),
+				color var(--theme-transition);
+		}
+	}
+
+	@media (forced-colors: active) {
+		.icon.light::before {
+			background: SelectedItem;
+		}
+	}
+</style>
+
+<script>
+	class ThemeToggle extends HTMLElement {
+		constructor() {
+			super();
+
+			const button = this.querySelector('button')!;
+
+			const setTheme = (dark: boolean) => {
+				document.documentElement.classList.toggle('theme-dark', dark);
+				button.setAttribute('aria-pressed', String(dark));
+			};
+
+			button.addEventListener('click', () => setTheme(!this.isDark()));
+			setTheme(this.isDark());
+		}
+
+		isDark() {
+			return document.documentElement.classList.contains('theme-dark');
+		}
+	}
+
+	if (!customElements.get('theme-toggle')) {
+		customElements.define('theme-toggle', ThemeToggle);
+	}
+</script>

@@ -1,0 +1,126 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import InlineText from '../InlineText.astro';
+
+interface Props {
+	faq: Dictionary['faq'];
+}
+
+const { faq } = Astro.props;
+---
+
+<section class="section section-alt" id="faq">
+	<div class="section-head reveal">
+		<p class="eyebrow">{faq.eyebrow}</p>
+		<h2 class="section-title">{faq.title}</h2>
+	</div>
+	<div class="faq-list">
+		{
+			faq.items.map((item) => (
+				<details class="faq-item reveal" name="faq">
+					<summary class="faq-q">
+						<span>{item.question}</span>
+						<span class="faq-chevron">
+							<Icon icon="chevronDown" size="18px" />
+						</span>
+					</summary>
+					<div class="faq-a">
+						<p>
+							<InlineText text={item.answer} />
+						</p>
+					</div>
+				</details>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.faq-list {
+		max-width: 45rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+
+	.faq-item {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		overflow: hidden;
+		transition:
+			border-color var(--theme-transition),
+			background-color var(--theme-transition);
+	}
+
+	.faq-item[open] {
+		border-color: var(--primary);
+	}
+
+	.faq-q {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1.1rem 1.4rem;
+		cursor: pointer;
+		font-family: var(--font-body);
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--text);
+		list-style: none;
+	}
+
+	.faq-q::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq-chevron {
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--text-mute);
+		flex-shrink: 0;
+		transition:
+			transform 0.3s,
+			color 0.2s;
+	}
+
+	.faq-item[open] .faq-chevron {
+		transform: rotate(180deg);
+		color: var(--primary);
+	}
+
+	.faq-a p {
+		padding: 0 1.4rem 1.1rem;
+		color: var(--text-dim);
+		font-size: 0.92rem;
+		line-height: 1.6;
+	}
+
+	.faq-a :global(code) {
+		background: var(--surface-2);
+		padding: 0.15rem 0.35rem;
+		border-radius: 4px;
+		font-size: 0.85em;
+	}
+
+	/* Раскрытие анимируется нативно, без JS. Там, где ::details-content
+	   не поддержан, аккордеон просто открывается мгновенно. */
+	@supports selector(::details-content) {
+		.faq-item::details-content {
+			block-size: 0;
+			overflow: hidden;
+			transition:
+				block-size 0.35s ease,
+				content-visibility 0.35s allow-discrete;
+		}
+
+		.faq-item[open]::details-content {
+			block-size: auto;
+		}
+	}
+</style>

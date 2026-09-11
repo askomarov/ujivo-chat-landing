@@ -1,0 +1,84 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import type { IconName } from '../icons';
+
+interface Props {
+	whom: Dictionary['whom'];
+}
+
+const { whom } = Astro.props;
+
+const icons: readonly IconName[] = ['shoppingBag', 'fileText', 'bookOpen', 'smartphone'];
+---
+
+<section class="section" id="for-whom">
+	<div class="section-head reveal">
+		<p class="eyebrow">{whom.eyebrow}</p>
+		<h2 class="section-title">{whom.title}</h2>
+	</div>
+	<div class="whom-grid">
+		{
+			whom.items.map((item, index) => (
+				<div class="card whom-card reveal">
+					<div class="whom-icon">
+						<Icon icon={icons[index]!} size="24px" />
+					</div>
+					<h3>{item.title}</h3>
+					<p>{item.text}</p>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.whom-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 1.5rem;
+	}
+
+	.whom-card {
+		padding: 1.8rem;
+	}
+
+	.whom-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 10px;
+		background: var(--primary-dim);
+		color: var(--primary);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 1.2rem;
+		transition:
+			background-color var(--theme-transition),
+			color var(--theme-transition);
+	}
+
+	.whom-card h3 {
+		font-size: 1rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+		color: var(--text);
+	}
+
+	.whom-card p {
+		color: var(--text-dim);
+		font-size: 0.88rem;
+	}
+
+	@media (max-width: 56.24em) {
+		.whom-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 500px) {
+		.whom-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,199 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import {
+	HTML_LANG,
+	LANG_STORAGE_KEY,
+	LOCALE_LABELS,
+	LOCALES,
+	useTranslations,
+	type Lang,
+} from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+	lang: Lang;
+	/** Путь без префикса локали. */
+	path?: string;
+}
+
+const { lang, path = '' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<lang-switch data-storage-key={LANG_STORAGE_KEY}>
+	<details>
+		<summary aria-label={`${t.a11y.language}: ${LOCALE_LABELS[lang]}`}>
+			<span>{lang.toUpperCase()}</span>
+			<span class="chevron">
+				<Icon icon="chevronDown" size="0.85rem" />
+			</span>
+		</summary>
+		<ul>
+			{
+				LOCALES.map((locale) => (
+					<li>
+						<a
+							href={getRelativeLocaleUrl(locale, path)}
+							hreflang={HTML_LANG[locale]}
+							lang={HTML_LANG[locale]}
+							data-locale={locale}
+							aria-current={locale === lang ? 'true' : undefined}
+						>
+							<span>{LOCALE_LABELS[locale]}</span>
+							{locale === lang && <Icon icon="check" size="0.85rem" />}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</details>
+</lang-switch>
+
+<style>
+	lang-switch {
+		position: relative;
+		display: inline-block;
+	}
+
+	summary {
+		display: flex;
+		align-items: center;
+		gap: 0.15rem;
+		height: 1.7rem;
+		padding: 0 0.45rem 0 0.65rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-pill);
+		background-color: var(--surface);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: var(--text-mute);
+		cursor: pointer;
+		list-style: none;
+		transition:
+			color var(--theme-transition),
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	summary::-webkit-details-marker,
+	summary::marker {
+		display: none;
+		content: none;
+	}
+
+	summary:hover {
+		color: var(--text);
+		border-color: var(--border-hover);
+	}
+
+	details[open] summary {
+		color: var(--text);
+		border-color: var(--border-hover);
+	}
+
+	.chevron {
+		display: flex;
+		transition: transform 0.2s;
+	}
+
+	details[open] .chevron {
+		transform: rotate(180deg);
+	}
+
+	ul {
+		position: absolute;
+		top: calc(100% + 0.4rem);
+		left: 0;
+		z-index: 1;
+		min-width: 9.5rem;
+		padding: 0.25rem;
+		list-style: none;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-sm);
+		box-shadow: var(--shadow);
+	}
+
+	a {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.4rem 0.6rem;
+		border-radius: calc(var(--radius-sm) - 2px);
+		font-size: 0.82rem;
+		font-weight: 500;
+		color: var(--text-dim);
+		white-space: nowrap;
+		transition:
+			color var(--theme-transition),
+			background-color var(--theme-transition);
+	}
+
+	a:hover {
+		color: var(--text);
+		background-color: var(--surface-2);
+	}
+
+	a[aria-current] {
+		color: var(--primary);
+		font-weight: 600;
+	}
+
+	@media (forced-colors: active) {
+		a[aria-current] {
+			color: SelectedItem;
+		}
+	}
+</style>
+
+<script>
+	import { persistLang } from '../i18n/preference';
+	import type { Lang } from '../i18n/locales';
+
+	class LangSwitch extends HTMLElement {
+		connectedCallback() {
+			const details = this.querySelector('details');
+			if (!details) return;
+
+			const close = () => {
+				details.open = false;
+			};
+
+			const onPointerDown = (event: PointerEvent) => {
+				if (!this.contains(event.target as Node)) close();
+			};
+
+			const onKeyDown = (event: KeyboardEvent) => {
+				if (event.key === 'Escape') {
+					close();
+					details.querySelector('summary')?.focus();
+				}
+			};
+
+			details.addEventListener('toggle', () => {
+				if (details.open) {
+					requestAnimationFrame(() => {
+						document.addEventListener('pointerdown', onPointerDown);
+						document.addEventListener('keydown', onKeyDown);
+					});
+				} else {
+					document.removeEventListener('pointerdown', onPointerDown);
+					document.removeEventListener('keydown', onKeyDown);
+				}
+			});
+
+			this.querySelectorAll<HTMLAnchorElement>('a[data-locale]').forEach((link) => {
+				link.addEventListener('click', () => {
+					const locale = link.dataset.locale;
+					if (locale) persistLang(locale as Lang);
+				});
+			});
+		}
+	}
+
+	if (!customElements.get('lang-switch')) {
+		customElements.define('lang-switch', LangSwitch);
+	}
+</script>

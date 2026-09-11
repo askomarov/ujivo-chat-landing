@@ -1,0 +1,305 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOGIN_URL } from '../config';
+import { useTranslations, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+import LangSwitch from './LangSwitch.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+	lang: Lang;
+	path?: string;
+}
+
+const { lang, path = '' } = Astro.props;
+const t = useTranslations(lang);
+const home = getRelativeLocaleUrl(lang, path);
+
+const navLinks = [
+	{ href: '#how', label: t.nav.how },
+	{ href: '#features', label: t.nav.features },
+	{ href: '#for-whom', label: t.nav.forWhom },
+	{ href: '#faq', label: t.nav.faq },
+];
+---
+
+<header class="site-header" id="siteHeader">
+	<a href={home} class="logo" aria-label="UjivoChat">
+		<Icon icon="logo" size="1.5rem" color="var(--primary)" />
+	</a>
+
+	<div class="header-menu" id="headerMenu">
+		<nav class="nav-links" aria-label={t.a11y.mainNav}>
+			{navLinks.map(({ href, label }) => <a {href}>{label}</a>)}
+		</nav>
+
+		<div class="header-actions">
+			<LangSwitch {lang} {path} />
+			<ThemeToggle label={t.a11y.theme} />
+			<a href="#cta" class="btn btn-primary btn-sm">{t.actions.try}</a>
+		</div>
+	</div>
+
+	<button
+		class="burger"
+		id="burger"
+		type="button"
+		aria-label={t.a11y.menu}
+		aria-expanded="false"
+		aria-controls="headerMenu"
+	>
+		<span></span><span></span><span></span>
+	</button>
+</header>
+
+<script>
+	const header = document.getElementById('siteHeader');
+	const burger = document.getElementById('burger');
+	const menu = document.getElementById('headerMenu');
+
+	if (header && burger && menu) {
+		const desktop = window.matchMedia('(min-width: 56.25em)');
+
+		// Видимость меню задаёт CSS. JS только помечает мобильную панель
+		// раскрытой, поэтому на десктопе шапка не зависит от скрипта.
+		const setOpen = (open: boolean) => {
+			menu.classList.toggle('open', open);
+			burger.classList.toggle('open', open);
+			burger.setAttribute('aria-expanded', String(open));
+		};
+
+		burger.addEventListener('click', () => setOpen(!menu.classList.contains('open')));
+
+		desktop.addEventListener('change', (event) => {
+			if (event.matches) setOpen(false);
+		});
+
+		menu.querySelectorAll('a').forEach((link) =>
+			link.addEventListener('click', () => {
+				if (!desktop.matches) setOpen(false);
+			}),
+		);
+
+		const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+
+		// Подсветка активного раздела вместо ручного aria-current.
+		const links = Array.from(menu.querySelectorAll<HTMLAnchorElement>('.nav-links a'));
+		const targets = links.flatMap((link) => {
+			const section = document.getElementById(link.hash.slice(1));
+			return section ? [{ link, section }] : [];
+		});
+
+		if (targets.length > 0 && 'IntersectionObserver' in window) {
+			const spy = new IntersectionObserver(
+				(entries) => {
+					const visible = entries.find((entry) => entry.isIntersecting);
+					if (!visible) return;
+					links.forEach((link) => link.removeAttribute('aria-current'));
+					targets
+						.find((target) => target.section === visible.target)
+						?.link.setAttribute('aria-current', 'true');
+				},
+				{ rootMargin: '-30% 0px -60% 0px' },
+			);
+
+			targets.forEach(({ section }) => spy.observe(section));
+		}
+	}
+</script>
+
+<style>
+	.site-header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem 2rem;
+		border-bottom: 1px solid transparent;
+		transition:
+			background-color var(--theme-transition),
+			box-shadow 0.3s,
+			padding 0.3s,
+			border-color var(--theme-transition);
+	}
+
+	.site-header.scrolled {
+		background: var(--header-bg);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		box-shadow: var(--shadow-sm);
+		border-bottom-color: var(--border);
+		padding: 0.7rem 2rem;
+	}
+
+	/* Приём стартера: на десктопе контейнер меню растворяется и его дети
+	   становятся прямыми флекс-элементами шапки. */
+	.header-menu {
+		display: contents;
+	}
+
+	.nav-links {
+		position: relative;
+		display: flex;
+		gap: 0.15rem;
+		padding: 0.3rem;
+		border-radius: var(--radius-pill);
+		background: var(--gradient-pill);
+		box-shadow: var(--shadow-md);
+	}
+
+	.nav-links::before {
+		content: '';
+		position: absolute;
+		inset: -1px;
+		border-radius: inherit;
+		padding: 1px;
+		background: var(--gradient-stroke);
+		mask:
+			linear-gradient(#000 0 0) content-box,
+			linear-gradient(#000 0 0);
+		mask-composite: exclude;
+		-webkit-mask:
+			linear-gradient(#000 0 0) content-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		pointer-events: none;
+	}
+
+	.nav-links a {
+		padding: 0.4rem 0.9rem;
+		border-radius: var(--radius-pill);
+		font-size: 0.88rem;
+		font-weight: 500;
+		color: var(--text-dim);
+		white-space: nowrap;
+		transition:
+			color var(--theme-transition),
+			background-color var(--theme-transition);
+	}
+
+	.nav-links a:hover {
+		color: var(--text);
+		background-color: var(--surface-2);
+	}
+
+	.nav-links a[aria-current] {
+		color: #fff;
+		background: var(--primary);
+	}
+
+	.header-actions {
+		display: flex;
+		gap: 0.6rem;
+		align-items: center;
+	}
+
+	.burger {
+		display: none;
+		flex-direction: column;
+		gap: 5px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 6px;
+	}
+
+	.burger span {
+		width: 22px;
+		height: 2px;
+		background: var(--text);
+		border-radius: 2px;
+		transition:
+			transform 0.3s,
+			opacity 0.3s,
+			background-color var(--theme-transition);
+	}
+
+	.burger.open span:nth-child(1) {
+		transform: translateY(7px) rotate(45deg);
+	}
+
+	.burger.open span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.burger.open span:nth-child(3) {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
+	@media (max-width: 56.24em) {
+		.site-header {
+			padding: 0.8rem 1.2rem;
+		}
+
+		.site-header.scrolled {
+			padding: 0.6rem 1.2rem;
+		}
+
+		.burger {
+			display: flex;
+		}
+
+		/* Единая панель вместо двух наложенных fixed-слоёв из reference. */
+		.header-menu {
+			display: none;
+			flex-direction: column;
+			gap: 1rem;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			padding: 1.5rem 1.2rem;
+			background: var(--menu-bg);
+			backdrop-filter: blur(16px);
+			-webkit-backdrop-filter: blur(16px);
+			border-bottom: 1px solid var(--border);
+			box-shadow: var(--shadow);
+		}
+
+		.header-menu.open {
+			display: flex;
+		}
+
+		.nav-links {
+			flex-direction: column;
+			gap: 0.25rem;
+			padding: 0;
+			background: none;
+			box-shadow: none;
+		}
+
+		.nav-links::before {
+			display: none;
+		}
+
+		.nav-links a {
+			padding: 0.7rem 0.9rem;
+			font-size: 1rem;
+			border-radius: var(--radius-sm);
+		}
+
+		.header-actions {
+			flex-wrap: wrap;
+			gap: 0.6rem;
+			padding-top: 1rem;
+			border-top: 1px solid var(--border);
+		}
+
+		.header-actions .btn {
+			flex: 1;
+		}
+	}
+
+	@media (forced-colors: active) {
+		.nav-links a[aria-current] {
+			background: SelectedItem;
+		}
+	}
+</style>

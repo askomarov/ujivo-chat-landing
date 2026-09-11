@@ -1,0 +1,136 @@
+---
+import { getAbsoluteLocaleUrl } from 'astro:i18n';
+import {
+	DEFAULT_LOCALE,
+	HTML_LANG,
+	LANG_STORAGE_KEY,
+	LOCALES,
+	OG_LOCALE,
+	type Lang,
+} from '../i18n';
+import '../styles/global.css';
+
+interface Props {
+	lang: Lang;
+	title: string;
+	description: string;
+	/** Путь без префикса локали, для hreflang. */
+	path?: string;
+}
+
+const { lang, title, description, path = '' } = Astro.props;
+
+const alternates = LOCALES.map((locale) => ({
+	locale,
+	href: getAbsoluteLocaleUrl(locale, path),
+}));
+const canonical = alternates.find((entry) => entry.locale === lang)!.href;
+const localeList = [...LOCALES];
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+<meta name="description" content={description} />
+
+{/* Ранний редирект: storage → browser → sr. До первого пейнта. */}
+<script
+	is:inline
+	define:vars={{
+		currentLang: lang,
+		defaultLocale: DEFAULT_LOCALE,
+		locales: localeList,
+		storageKey: LANG_STORAGE_KEY,
+	}}
+>
+	(function () {
+		try {
+			var stored = localStorage.getItem(storageKey);
+			var preferred = null;
+
+			if (stored && locales.indexOf(stored) !== -1) {
+				preferred = stored;
+			} else {
+				var browserLangs =
+					navigator.languages && navigator.languages.length
+						? navigator.languages
+						: [navigator.language];
+				for (var i = 0; i < browserLangs.length; i++) {
+					var primary = String(browserLangs[i] || '')
+						.toLowerCase()
+						.split('-')[0];
+					if (primary && locales.indexOf(primary) !== -1) {
+						preferred = primary;
+						break;
+					}
+				}
+				if (!preferred) preferred = defaultLocale;
+				localStorage.setItem(storageKey, preferred);
+			}
+
+			if (preferred === currentLang) return;
+
+			location.replace(preferred === defaultLocale ? '/' : '/' + preferred + '/');
+		} catch (e) {
+			/* storage / private mode */
+		}
+	})();
+</script>
+
+<link rel="canonical" href={canonical} />
+{
+	alternates.map(({ locale, href }) => (
+		<link rel="alternate" hreflang={HTML_LANG[locale]} href={href} />
+	))
+}
+<link
+	rel="alternate"
+	hreflang="x-default"
+	href={alternates.find((entry) => entry.locale === DEFAULT_LOCALE)!.href}
+/>
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={OG_LOCALE[lang]} />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rubik:wght@500;600&display=swap"
+	rel="stylesheet"
+/>
+
+<script is:inline>
+	// Инлайн и блокирующе: тема должна быть выставлена до первого пейнта.
+	const getThemePreference = () => {
+		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+			return localStorage.getItem('theme');
+		}
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	};
+
+	document.documentElement.classList.toggle('theme-dark', getThemePreference() === 'dark');
+
+	if (typeof localStorage !== 'undefined') {
+		const observer = new MutationObserver(() => {
+			const isDark = document.documentElement.classList.contains('theme-dark');
+			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+		});
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+	}
+</script>
+
+<noscript>
+	<style>
+		.reveal {
+			opacity: 1 !important;
+			transform: none !important;
+		}
+	</style>
+</noscript>

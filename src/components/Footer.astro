@@ -1,0 +1,108 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { LOGIN_URL } from '../config';
+import { useTranslations, type Lang } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = getRelativeLocaleUrl(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="footer-inner">
+		<div class="footer-brand">
+			<a href={home} class="logo" aria-label="UjivoChat">
+				<Icon icon="logo" size="1.5rem" color="var(--primary)" />
+			</a>
+			<p class="footer-tagline">{t.footer.tagline}</p>
+		</div>
+		<nav class="footer-links" aria-label={t.a11y.footerNav}>
+			<a href="#how">{t.nav.how}</a>
+			<a href="#features">{t.nav.features}</a>
+			<a href="#for-whom">{t.nav.forWhom}</a>
+			<a href="#faq">{t.nav.faq}</a>
+			<a href={LOGIN_URL}>{t.actions.login}</a>
+		</nav>
+	</div>
+	<div class="footer-bottom">
+		<p>© {year} {t.footer.brand}</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--border);
+		background-color: var(--bg-alt);
+		padding: 3rem 2rem 1.5rem;
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.footer-inner {
+		max-width: var(--max);
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 2rem;
+		flex-wrap: wrap;
+	}
+
+	.footer-brand {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.footer-tagline {
+		color: var(--text-dim);
+		font-size: 0.9rem;
+	}
+
+	.footer-links {
+		display: flex;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+	}
+
+	.footer-links a {
+		color: var(--text-dim);
+		font-size: 0.9rem;
+		font-weight: 500;
+		transition: color var(--theme-transition);
+	}
+
+	.footer-links a:hover {
+		color: var(--primary);
+	}
+
+	.footer-bottom {
+		max-width: var(--max);
+		margin: 2.5rem auto 0;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--border);
+		text-align: center;
+	}
+
+	.footer-bottom p {
+		color: var(--text-mute);
+		font-size: 0.85rem;
+	}
+
+	@media (max-width: 500px) {
+		.footer-inner {
+			flex-direction: column;
+		}
+
+		.footer-links {
+			gap: 1rem;
+		}
+	}
+</style>

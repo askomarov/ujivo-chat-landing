@@ -1,0 +1,11 @@
+---
+import { parseInline } from '../i18n/inline';
+
+interface Props {
+	text: string;
+}
+
+const segments = parseInline(Astro.props.text);
+---
+
+{segments.map((segment) => (segment.code ? <code>{segment.value}</code> : segment.value))}

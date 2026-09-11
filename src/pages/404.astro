@@ -1,0 +1,32 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { langFromPath, useTranslations } from '../i18n';
+
+const lang = langFromPath(Astro.url.pathname);
+const t = useTranslations(lang);
+---
+
+<BaseLayout {lang} title={`${t.notFound.title} — ${t.footer.brand}`} description={t.notFound.text}>
+	<section class="section not-found">
+		<h1 class="section-title">{t.notFound.title}</h1>
+		<p>{t.notFound.text}</p>
+		<a href={getRelativeLocaleUrl(lang)} class="btn btn-primary btn-lg">{t.notFound.back}</a>
+	</section>
+</BaseLayout>
+
+<style>
+	.not-found {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.2rem;
+		text-align: center;
+		padding-top: 12rem;
+		padding-bottom: 8rem;
+	}
+
+	p {
+		color: var(--text-dim);
+	}
+</style>

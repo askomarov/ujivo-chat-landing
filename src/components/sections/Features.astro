@@ -1,0 +1,84 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import type { IconName } from '../icons';
+
+interface Props {
+	features: Dictionary['features'];
+}
+
+const { features } = Astro.props;
+
+const icons: readonly IconName[] = [
+	'monitor',
+	'zap',
+	'grid',
+	'user',
+	'palette',
+	'users',
+	'settings',
+];
+---
+
+<section class="section section-alt" id="features">
+	<div>
+		<div class="section-head reveal">
+			<p class="eyebrow">{features.eyebrow}</p>
+			<h2 class="section-title">{features.title}</h2>
+		</div>
+		<ul class="features-list">
+			{
+				features.items.map((item, index) => (
+					<li class="feature reveal">
+						<Icon icon={icons[index]!} size="20px" color="var(--primary)" />
+						<div>
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	/* Семь возможностей — это список, а не карточная сетка: в три колонки
+	   последний ряд оставался бы с одинокой карточкой. */
+	.features-list {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 4rem;
+	}
+
+	.feature {
+		display: flex;
+		gap: 1rem;
+		align-items: start;
+		padding: 1.4rem 0;
+		border-top: 1px solid var(--border);
+	}
+
+	.feature :global(svg) {
+		margin-top: 0.25rem;
+	}
+
+	.feature h3 {
+		font-size: 1.02rem;
+		font-weight: 600;
+		margin-bottom: 0.25rem;
+		color: var(--text);
+	}
+
+	.feature p {
+		color: var(--text-dim);
+		font-size: 0.92rem;
+	}
+
+	@media (max-width: 56.24em) {
+		.features-list {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

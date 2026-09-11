@@ -1,0 +1,40 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { icons, type IconDef, type IconName } from './icons';
+
+interface Props {
+	icon: IconName;
+	color?: string;
+	size?: string;
+}
+
+const { color = 'currentcolor', icon, size } = Astro.props;
+const definition: IconDef = icons[icon];
+const { path, viewBox = '0 0 24 24', mode = 'stroke', strokeWidth = 1.8 } = definition;
+
+const attrs: HTMLAttributes<'svg'> = {};
+if (size) attrs.style = { '--size': size };
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox={viewBox}
+	aria-hidden="true"
+	fill={mode === 'fill' ? color : 'none'}
+	stroke={mode === 'fill' ? 'none' : color}
+	stroke-width={mode === 'fill' ? undefined : strokeWidth}
+	stroke-linecap={mode === 'fill' ? undefined : 'round'}
+	stroke-linejoin={mode === 'fill' ? undefined : 'round'}
+	{...attrs}
+>
+	<g set:html={path} />
+</svg>
+
+<style>
+	svg {
+		flex-shrink: 0;
+		vertical-align: middle;
+		width: var(--size, 1em);
+		height: var(--size, 1em);
+	}
+</style>

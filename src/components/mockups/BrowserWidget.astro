@@ -1,0 +1,315 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+	mockup: Dictionary['mockup'];
+	sendLabel: string;
+}
+
+const { mockup, sendLabel } = Astro.props;
+---
+
+<div class="mockup-browser">
+	<div class="browser-bar">
+		<span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+		<div class="browser-url">{mockup.browserUrl}</div>
+	</div>
+	<div class="browser-body">
+		<div class="site-placeholder">
+			<div class="sp-line w60"></div>
+			<div class="sp-line w40"></div>
+			<div class="sp-line w80"></div>
+			<div class="sp-line w30"></div>
+		</div>
+
+		<div class="widget-panel">
+			<div class="widget-header">
+				<div class="widget-avatar"></div>
+				<div class="widget-op-info">
+					<span class="widget-op-name">{mockup.operatorName}</span>
+					<span class="widget-op-status">
+						<span class="status-dot"></span>
+						{mockup.operatorStatus}
+					</span>
+				</div>
+			</div>
+			<div class="widget-body">
+				<div class="bubble bubble-visitor">{mockup.visitorMessage}</div>
+				<div class="bubble bubble-operator">{mockup.operatorMessage}</div>
+				<div class="typing-indicator">
+					<span></span><span></span><span></span>
+				</div>
+			</div>
+			<div class="widget-input">
+				<span>{mockup.inputPlaceholder}</span>
+				<button class="widget-send" type="button" aria-label={sendLabel} tabindex="-1">
+					<Icon icon="send" size="14px" />
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.mockup-browser {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: var(--shadow-lg);
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.browser-bar {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.6rem 0.8rem;
+		background: var(--surface-2);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+	}
+
+	.dot.red {
+		background: #ff5f57;
+	}
+
+	.dot.yellow {
+		background: #ffbd2e;
+	}
+
+	.dot.green {
+		background: #28c940;
+	}
+
+	.browser-url {
+		margin-left: 0.5rem;
+		padding: 0.25rem 0.6rem;
+		background: var(--bg);
+		border-radius: 4px;
+		font-size: 0.75rem;
+		color: var(--text-mute);
+		font-family: var(--font-mono);
+	}
+
+	.browser-body {
+		position: relative;
+		padding: 1.2rem;
+		min-height: 280px;
+		background: var(--bg-alt);
+	}
+
+	.site-placeholder {
+		margin-bottom: 1rem;
+	}
+
+	.sp-line {
+		height: 8px;
+		border-radius: 4px;
+		background: var(--placeholder);
+		margin-bottom: 0.6rem;
+	}
+
+	.w60 {
+		width: 60%;
+	}
+	.w40 {
+		width: 40%;
+	}
+	.w80 {
+		width: 80%;
+	}
+	.w30 {
+		width: 30%;
+	}
+
+	/* Ширина текучая: в узкой колонке hero мокап браузера бывает уже 260px
+	   и панель обрезалась бы левым краем. */
+	.widget-panel {
+		position: absolute;
+		bottom: 12px;
+		right: 12px;
+		width: min(260px, calc(100% - 24px));
+		background: var(--surface);
+		border-radius: 12px;
+		box-shadow: var(--shadow-panel);
+		border: 1px solid var(--border);
+		overflow: hidden;
+		z-index: 5;
+	}
+
+	.widget-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.7rem 0.8rem;
+		background: var(--primary);
+		color: #fff;
+	}
+
+	.widget-avatar {
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.25);
+		border: 2px solid rgba(255, 255, 255, 0.4);
+		flex-shrink: 0;
+	}
+
+	.widget-op-info {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.2;
+	}
+
+	.widget-op-name {
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+
+	.widget-op-status {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 0.7rem;
+		opacity: 0.85;
+	}
+
+	.status-dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #4ade80;
+	}
+
+	.widget-body {
+		padding: 0.6rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		min-height: 90px;
+	}
+
+	.bubble {
+		max-width: 80%;
+		padding: 0.4rem 0.65rem;
+		border-radius: 10px;
+		font-size: 0.78rem;
+		line-height: 1.4;
+		animation: bubbleIn 0.4s ease both;
+	}
+
+	.bubble-visitor {
+		align-self: flex-end;
+		background: var(--bubble-visitor-bg);
+		color: var(--bubble-visitor-text);
+		border-bottom-right-radius: 3px;
+		animation-delay: 0.15s;
+	}
+
+	.bubble-operator {
+		align-self: flex-start;
+		background: var(--surface-2);
+		color: var(--text);
+		border-bottom-left-radius: 3px;
+		animation-delay: 0.3s;
+	}
+
+	@keyframes bubbleIn {
+		from {
+			opacity: 0;
+			transform: translateY(8px) scale(0.95);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	.typing-indicator {
+		display: flex;
+		gap: 3px;
+		align-self: flex-start;
+		padding: 0.35rem 0.55rem;
+		background: var(--surface-2);
+		border-radius: 10px;
+		animation: bubbleIn 0.4s ease 0.5s both;
+	}
+
+	.typing-indicator span {
+		width: 5px;
+		height: 5px;
+		border-radius: 50%;
+		background: var(--text-mute);
+		animation: typing 1.2s infinite;
+	}
+
+	.typing-indicator span:nth-child(2) {
+		animation-delay: 0.2s;
+	}
+
+	.typing-indicator span:nth-child(3) {
+		animation-delay: 0.4s;
+	}
+
+	@keyframes typing {
+		0%,
+		60%,
+		100% {
+			opacity: 0.3;
+			transform: translateY(0);
+		}
+		30% {
+			opacity: 1;
+			transform: translateY(-3px);
+		}
+	}
+
+	.widget-input {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.5rem 0.6rem;
+		border-top: 1px solid var(--border);
+	}
+
+	.widget-input span {
+		font-size: 0.75rem;
+		color: var(--text-mute);
+		flex: 1;
+	}
+
+	.widget-send {
+		width: 28px;
+		height: 28px;
+		border-radius: 6px;
+		border: none;
+		background: var(--primary);
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	@media (max-width: 500px) {
+		.widget-panel {
+			width: min(220px, calc(100% - 16px));
+			bottom: 8px;
+			right: 8px;
+		}
+
+		.browser-body {
+			min-height: 240px;
+			padding: 1rem;
+		}
+	}
+</style>

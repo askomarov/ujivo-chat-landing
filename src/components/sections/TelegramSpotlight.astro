@@ -1,0 +1,131 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import PhoneMockup from '../mockups/PhoneMockup.astro';
+
+interface Props {
+	spotlight: Dictionary['spotlight'];
+}
+
+const { spotlight } = Astro.props;
+---
+
+<section class="section tg-spotlight" id="tg-feature">
+	<div class="tg-spotlight-inner reveal">
+		<div class="tg-spotlight-text">
+			<span class="eyebrow eyebrow-tg">
+				<Icon icon="telegram" size="18px" />
+				{spotlight.eyebrow}
+			</span>
+			<h2 class="tg-spotlight-title">{spotlight.title}</h2>
+			<p class="tg-spotlight-sub">{spotlight.subtitle}</p>
+			<ul class="tg-feature-list">
+				{
+					spotlight.items.map((item) => (
+						<li>
+							<span class="check-icon">
+								<Icon icon="check" size="14px" />
+							</span>
+							<div>
+								<strong>{item.strong}</strong> {item.rest}
+							</div>
+						</li>
+					))
+				}
+			</ul>
+			<a href="#cta" class="btn btn-primary btn-lg">{spotlight.cta}</a>
+		</div>
+		<div class="tg-spotlight-visual reveal">
+			<PhoneMockup {spotlight} />
+		</div>
+	</div>
+</section>
+
+<style>
+	.tg-spotlight {
+		max-width: none;
+		padding: 5rem 2rem;
+	}
+
+	.tg-spotlight-inner {
+		max-width: var(--max);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 4rem;
+		align-items: center;
+	}
+
+	.eyebrow-tg {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--accent-tg);
+		margin-bottom: 1rem;
+	}
+
+	.tg-spotlight-title {
+		font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+		font-weight: 600;
+		margin-bottom: 1rem;
+		color: var(--text);
+	}
+
+	.tg-spotlight-sub {
+		font-size: 1.05rem;
+		color: var(--text-dim);
+		margin-bottom: 1.8rem;
+	}
+
+	.tg-feature-list {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 1.1rem;
+		margin-bottom: 2rem;
+	}
+
+	.tg-feature-list li {
+		display: flex;
+		gap: 0.8rem;
+		align-items: flex-start;
+	}
+
+	.check-icon {
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		background: var(--success);
+		color: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		margin-top: 2px;
+	}
+
+	.tg-feature-list strong {
+		color: var(--text);
+	}
+
+	.tg-feature-list li > div {
+		color: var(--text-dim);
+		font-size: 0.95rem;
+	}
+
+	.tg-spotlight-visual {
+		display: flex;
+		justify-content: center;
+	}
+
+	@media (max-width: 56.24em) {
+		.tg-spotlight {
+			padding: 3.5rem 1.2rem;
+		}
+
+		.tg-spotlight-inner {
+			grid-template-columns: 1fr;
+			gap: 2.5rem;
+		}
+	}
+</style>

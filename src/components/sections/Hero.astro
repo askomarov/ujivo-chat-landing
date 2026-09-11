@@ -1,0 +1,251 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import BrowserWidget from '../mockups/BrowserWidget.astro';
+import TelegramPanel from '../mockups/TelegramPanel.astro';
+
+interface Props {
+	t: Dictionary;
+}
+
+const { t } = Astro.props;
+---
+
+<section class="hero" id="hero">
+	<div class="hero-bg">
+		<div class="grid-overlay"></div>
+	</div>
+	<div class="hero-inner">
+		<div class="hero-text">
+			<span class="badge reveal">
+				<span class="badge-dot"></span>
+				{t.hero.badge}
+			</span>
+			<h1 class="hero-title reveal">
+				{t.hero.titleLine}<br />
+				<span class="accent-text">{t.hero.titleAccent}</span>
+			</h1>
+			<p class="hero-sub reveal">{t.hero.subtitle}</p>
+			<div class="hero-cta reveal">
+				<a href="#cta" class="btn btn-primary btn-lg">{t.hero.ctaPrimary}</a>
+				<a href="#how" class="btn btn-ghost btn-lg">{t.hero.ctaSecondary}</a>
+			</div>
+		</div>
+
+		<div class="hero-visual reveal">
+			<div class="mockup-container">
+				<div class="mockup-site">
+					<BrowserWidget mockup={t.mockup} sendLabel={t.a11y.send} />
+				</div>
+
+				<div class="mockup-arrow">
+					<Icon icon="arrowRight" size="50px" />
+					<span class="arrow-label">
+						{t.mockup.arrowLabel[0]}<br />{t.mockup.arrowLabel[1]}
+					</span>
+				</div>
+
+				<TelegramPanel mockup={t.mockup} />
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		padding: 8rem 2rem 5rem;
+		overflow: hidden;
+	}
+
+	.hero-bg {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+
+	.grid-overlay {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(var(--grid-line) 1px, transparent 1px),
+			linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+		background-size: 48px 48px;
+		mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 80%);
+		-webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 80%);
+	}
+
+	/* Единственный слой фона — техническая сетка. Она держит границу
+	   первого экрана; декоративных «шаров» тут намеренно нет. */
+	.hero-bg::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 0;
+		height: 1px;
+		background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+	}
+
+	.hero-inner {
+		position: relative;
+		z-index: 1;
+		max-width: var(--max);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+		gap: 3rem;
+		align-items: center;
+	}
+
+	.hero-text {
+		max-width: 520px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.35rem 0.85rem;
+		border-radius: var(--radius-pill);
+		background: var(--primary-dim);
+		border: 1px solid var(--primary-border);
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--primary);
+		margin-bottom: 1.5rem;
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition),
+			color var(--theme-transition);
+	}
+
+	.badge-dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--primary);
+		animation: pulse 2s infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.4;
+		}
+	}
+
+	.hero-title {
+		font-size: clamp(2.1rem, 4.2vw, 2.9rem);
+		font-weight: 600;
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+		margin-bottom: 1.2rem;
+	}
+
+	/* Подзаголовок держит вес рядом с h1, а не превращается в подпись. */
+	.hero-sub {
+		font-size: 1.18rem;
+		line-height: 1.55;
+		color: var(--text-dim);
+		margin-bottom: 2rem;
+		max-width: 29rem;
+	}
+
+	.hero-cta {
+		display: flex;
+		gap: 0.8rem;
+		flex-wrap: wrap;
+	}
+
+	.hero-visual {
+		position: relative;
+	}
+
+	.mockup-container {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		position: relative;
+	}
+
+	.mockup-site {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.mockup-arrow {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.3rem;
+		color: var(--primary);
+		flex-shrink: 0;
+	}
+
+	.mockup-arrow :global(svg) {
+		width: 50px;
+		height: 28px;
+	}
+
+	.arrow-label {
+		font-size: 0.7rem;
+		font-weight: 600;
+		color: var(--text-dim);
+		text-align: center;
+		line-height: 1.2;
+	}
+
+	@media (max-width: 56.24em) {
+		.hero {
+			padding: 7rem 1.2rem 3rem;
+		}
+
+		.hero-inner {
+			grid-template-columns: 1fr;
+			gap: 2.5rem;
+		}
+
+		.hero-text {
+			max-width: none;
+		}
+
+		.mockup-container {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 1.5rem;
+		}
+
+		.mockup-arrow {
+			align-self: center;
+			transform: rotate(90deg);
+		}
+
+		.arrow-label {
+			display: none;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.hero-title {
+			font-size: 2rem;
+		}
+
+		.hero-cta {
+			flex-direction: column;
+		}
+
+		.hero-cta .btn {
+			width: 100%;
+		}
+
+		.mockup-arrow {
+			display: none;
+		}
+
+		.mockup-container {
+			gap: 1rem;
+		}
+	}
+</style>

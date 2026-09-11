@@ -1,0 +1,85 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import TopicList from './TopicList.astro';
+
+interface Props {
+	spotlight: Dictionary['spotlight'];
+}
+
+const { spotlight } = Astro.props;
+---
+
+<div class="tg-phone">
+	<div class="tg-phone-screen">
+		<div class="tg-phone-header">
+			<Icon icon="telegram" size="20px" />
+			<span>{spotlight.phoneTitle}</span>
+		</div>
+		<TopicList
+			topics={spotlight.phoneTopics}
+			colors={['green', 'blue', 'orange', 'purple']}
+			compact
+		/>
+		<div class="tg-phone-badge">{spotlight.phoneBadge}</div>
+	</div>
+</div>
+
+<style>
+	/* В тёмной теме корпус почти сливается с фоном, поэтому рамка. */
+	.tg-phone {
+		width: 300px;
+		background: var(--bg-dark);
+		border: 1px solid var(--border);
+		border-radius: 28px;
+		padding: 10px;
+		box-shadow: var(--shadow-lg);
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.tg-phone-screen {
+		background: var(--tg-screen-bg);
+		border-radius: 20px;
+		overflow: hidden;
+		position: relative;
+		padding-bottom: 3.2rem;
+		transition: background-color var(--theme-transition);
+	}
+
+	.tg-phone-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.8rem;
+		background: #2aabee;
+		color: #fff;
+	}
+
+	.tg-phone-header span {
+		font-size: 0.85rem;
+		font-weight: 600;
+	}
+
+	.tg-phone-badge {
+		position: absolute;
+		bottom: 12px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: var(--primary);
+		color: #fff;
+		font-size: 0.75rem;
+		font-weight: 600;
+		padding: 0.4rem 0.9rem;
+		border-radius: var(--radius-pill);
+		box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+		white-space: nowrap;
+	}
+
+	@media (max-width: 56.24em) {
+		.tg-phone {
+			width: 270px;
+		}
+	}
+</style>

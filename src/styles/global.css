@@ -1,0 +1,350 @@
+@import './tokens.css';
+
+/* ===== RESET ===== */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: var(--header-offset);
+	background-color: var(--bg);
+}
+
+body {
+	min-height: 100vh;
+	font-family: var(--font-body);
+	background-color: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+}
+
+html, body {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.85em;
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-brand);
+	font-weight: 600;
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+/* ===== ФАКТУРА ===== */
+.page {
+	background: var(--noise-layer), var(--bg);
+	background-blend-mode: var(--noise-blend), normal;
+
+	> main {
+		flex: 1;
+	}
+}
+
+/* ===== УТИЛИТЫ ===== */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.skip-link {
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	z-index: 200;
+	padding: 0.5rem 1rem;
+	border-radius: var(--radius-sm);
+	background: var(--surface);
+	box-shadow: var(--shadow);
+	transform: translateY(-200%);
+	transition: transform 0.2s;
+}
+
+.skip-link:focus-visible {
+	transform: translateY(0);
+}
+
+/* ===== КНОПКИ ===== */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.7rem 1.4rem;
+	border-radius: 10px;
+	font-family: var(--font-body);
+	font-weight: 600;
+	font-size: 0.92rem;
+	border: none;
+	cursor: pointer;
+	letter-spacing: -0.01em;
+	transition:
+		transform 0.15s,
+		box-shadow 0.2s,
+		background var(--theme-transition),
+		color var(--theme-transition),
+		border-color var(--theme-transition);
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+}
+
+.btn:active {
+	transform: translateY(0);
+}
+
+.btn-sm {
+	padding: 0.5rem 1rem;
+	font-size: 0.85rem;
+}
+
+.btn-lg {
+	padding: 0.9rem 1.8rem;
+	font-size: 1rem;
+}
+
+.btn-primary {
+	background: var(--primary);
+	color: #fff;
+	box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+.btn-primary:hover {
+	background: var(--primary-hover);
+	box-shadow: var(--shadow-primary);
+}
+
+.btn-ghost {
+	background: transparent;
+	color: var(--text);
+	border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+	border-color: var(--border-hover);
+	background: var(--surface-2);
+	box-shadow: none;
+}
+
+/* ===== ФОКУС ===== */
+.btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+/* ===== СЕКЦИИ ===== */
+.section {
+	max-width: var(--max);
+	margin: 0 auto;
+	padding: 5rem 2rem;
+}
+
+.section-alt {
+	max-width: none;
+	background-color: var(--bg-alt);
+	border-top: 1px solid var(--border);
+	border-bottom: 1px solid var(--border);
+	transition:
+		background-color var(--theme-transition),
+		border-color var(--theme-transition);
+}
+
+.section-alt > * {
+	max-width: var(--max);
+	margin: 0 auto;
+}
+
+/* Заголовки секций выровнены по левому краю: центрирование остаётся
+   только у двух блоков, которым оно нужно по смыслу (honest и финальный CTA). */
+.section-head {
+	max-width: 46rem;
+	margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	font-size: 0.82rem;
+	font-weight: 600;
+	color: var(--primary);
+	margin-bottom: 0.5rem;
+}
+
+.section-head .eyebrow::before {
+	content: '';
+	width: 1.5rem;
+	height: 1px;
+	background: currentColor;
+	flex-shrink: 0;
+}
+
+.section-title {
+	font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+	font-weight: 600;
+	color: var(--text);
+}
+
+.accent-text {
+	color: var(--primary);
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card {
+	position: relative;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	transition:
+		border-color var(--theme-transition),
+		background-color var(--theme-transition),
+		box-shadow 0.3s,
+		transform 0.3s;
+}
+
+/* Градиентная обводка в приёме стартера: маска оставляет только рамку в 1px. */
+.card::after {
+	content: '';
+	position: absolute;
+	inset: -1px;
+	border-radius: inherit;
+	padding: 1px;
+	background: var(--gradient-stroke-accent);
+	mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	mask-composite: exclude;
+	-webkit-mask:
+		linear-gradient(#000 0 0) content-box,
+		linear-gradient(#000 0 0);
+	-webkit-mask-composite: xor;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s;
+}
+
+.card:hover {
+	box-shadow: var(--shadow);
+	transform: translateY(-3px);
+}
+
+.card:hover::after {
+	opacity: 1;
+}
+
+/* ===== ЛОГОТИП ===== */
+.logo {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: var(--font-brand);
+	font-weight: 600;
+	font-size: 1.15rem;
+	letter-spacing: -0.02em;
+	color: var(--text);
+}
+
+.logo-accent {
+	color: var(--primary);
+}
+
+/* ===== СНИППЕТ КОДА ===== */
+.code-snippet {
+	background: var(--bg-dark);
+	border-radius: var(--radius-sm);
+	padding: 0.8rem;
+	overflow-x: auto;
+}
+
+.code-snippet code {
+	color: var(--code-text);
+	font-size: 0.78rem;
+	line-height: 1.5;
+	white-space: pre;
+}
+
+/* ===== REVEAL ===== */
+.reveal {
+	opacity: 0;
+	transform: translateY(24px);
+	transition:
+		opacity 0.6s ease,
+		transform 0.6s ease;
+}
+
+.reveal.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+
+	.reveal {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.page {
+		background: none;
+		background-blend-mode: normal;
+	}
+}
+
+/* ===== АДАПТИВ ОБЩИХ БЛОКОВ ===== */
+@media (max-width: 900px) {
+	.section {
+		padding: 3.5rem 1.2rem;
+	}
+}

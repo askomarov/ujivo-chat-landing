@@ -1,0 +1,126 @@
+---
+import type { TopicItem } from '../../i18n/types';
+
+export type AvatarColor = 'green' | 'blue' | 'orange' | 'purple';
+
+interface Props {
+	topics: readonly TopicItem[];
+	colors: readonly AvatarColor[];
+	compact?: boolean;
+}
+
+const { topics, colors, compact } = Astro.props;
+---
+
+<div class:list={['tg-topics', compact && 'compact']}>
+	{
+		topics.map((topic, index) => (
+			<div class:list={['tg-topic', index === 0 && 'active']}>
+				<div class:list={['tg-topic-avatar', colors[index]]} />
+				<div class="tg-topic-content">
+					<div class="tg-topic-top">
+						<span class="tg-topic-name">{topic.name}</span>
+						<span class="tg-topic-time">{topic.time}</span>
+					</div>
+					<div class="tg-topic-msg">{topic.message}</div>
+				</div>
+				{topic.unread && <span class="tg-topic-badge">{topic.unread}</span>}
+			</div>
+		))
+	}
+</div>
+
+<style>
+	.tg-topics {
+		padding: 0.4rem;
+	}
+
+	.tg-topic {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		border-radius: var(--radius-sm);
+		transition: background-color 0.2s;
+	}
+
+	.compact .tg-topic {
+		padding: 0.55rem;
+	}
+
+	.tg-topic:hover {
+		background: var(--surface-2);
+	}
+
+	.tg-topic.active {
+		background: var(--accent-tg-light);
+	}
+
+	.tg-topic-avatar {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	.tg-topic-avatar.green {
+		background: #10b981;
+	}
+
+	.tg-topic-avatar.blue {
+		background: #3b82f6;
+	}
+
+	.tg-topic-avatar.orange {
+		background: #f59e0b;
+	}
+
+	.tg-topic-avatar.purple {
+		background: #8b5cf6;
+	}
+
+	.tg-topic-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.tg-topic-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.tg-topic-name {
+		font-size: 0.78rem;
+		font-weight: 600;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.tg-topic-time {
+		font-size: 0.68rem;
+		color: var(--text-mute);
+		flex-shrink: 0;
+		margin-left: 0.4rem;
+	}
+
+	.tg-topic-msg {
+		font-size: 0.72rem;
+		color: var(--text-dim);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 0.1rem;
+	}
+
+	.tg-topic-badge {
+		background: var(--accent-tg);
+		color: #fff;
+		font-size: 0.65rem;
+		font-weight: 700;
+		padding: 0.1rem 0.4rem;
+		border-radius: var(--radius-pill);
+		flex-shrink: 0;
+	}
+</style>

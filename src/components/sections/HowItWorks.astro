@@ -1,0 +1,92 @@
+---
+import { WIDGET_SNIPPET } from '../../config';
+import type { Dictionary } from '../../i18n';
+import InlineText from '../InlineText.astro';
+
+interface Props {
+	how: Dictionary['how'];
+}
+
+const { how } = Astro.props;
+---
+
+<section class="section section-alt" id="how">
+	<div>
+		<div class="section-head reveal">
+			<p class="eyebrow">{how.eyebrow}</p>
+			<h2 class="section-title">{how.title}</h2>
+		</div>
+		<ol class="steps">
+			{
+				how.items.map((item, index) => (
+					<li class="step reveal">
+						<span class="step-num">{index + 1}</span>
+						<h3>{item.title}</h3>
+						<p>
+							<InlineText text={item.text} />
+						</p>
+						{index === 0 && (
+							<div class="code-snippet">
+								<code>{WIDGET_SNIPPET}</code>
+							</div>
+						)}
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>
+
+<style>
+	/* Первый шаг шире остальных — он несёт сниппет. Верхняя линейка
+	   работает как индикатор прогресса вместо трёх одинаковых карточек. */
+	.steps {
+		display: grid;
+		grid-template-columns: 1.5fr 1fr 1fr;
+		gap: 2.5rem;
+		align-items: start;
+		list-style: none;
+	}
+
+	.step {
+		padding-top: 1.1rem;
+		border-top: 2px solid var(--border);
+		transition: border-color var(--theme-transition);
+	}
+
+	.step:first-child {
+		border-top-color: var(--primary);
+	}
+
+	.step-num {
+		display: block;
+		font-family: var(--font-brand);
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--primary);
+		margin-bottom: 0.6rem;
+	}
+
+	.step h3 {
+		font-size: 1.15rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+		color: var(--text);
+	}
+
+	.step p {
+		color: var(--text-dim);
+		font-size: 0.95rem;
+	}
+
+	.step .code-snippet {
+		margin-top: 1.2rem;
+	}
+
+	@media (max-width: 56.24em) {
+		.steps {
+			grid-template-columns: 1fr;
+			gap: 1.75rem;
+		}
+	}
+</style>

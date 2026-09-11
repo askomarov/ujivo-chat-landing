@@ -1,0 +1,61 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import TopicList from './TopicList.astro';
+
+interface Props {
+	mockup: Dictionary['mockup'];
+}
+
+const { mockup } = Astro.props;
+---
+
+<div class="mockup-telegram">
+	<div class="tg-header">
+		<Icon icon="telegram" size="22px" />
+		<div class="tg-group-info">
+			<span class="tg-group-name">{mockup.groupName}</span>
+			<span class="tg-group-sub">{mockup.groupSubtitle}</span>
+		</div>
+	</div>
+	<TopicList topics={mockup.topics} colors={['green', 'blue', 'orange']} />
+</div>
+
+<style>
+	.mockup-telegram {
+		flex: 1;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: var(--shadow-lg);
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	.tg-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.7rem 0.8rem;
+		background: #2aabee;
+		color: #fff;
+	}
+
+	.tg-group-info {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.2;
+	}
+
+	.tg-group-name {
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+
+	.tg-group-sub {
+		font-size: 0.68rem;
+		opacity: 0.8;
+	}
+</style>

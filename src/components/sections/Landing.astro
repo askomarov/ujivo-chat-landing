@@ -1,0 +1,28 @@
+---
+import { useTranslations, type Lang } from '../../i18n';
+import Faq from './Faq.astro';
+import Features from './Features.astro';
+import FinalCta from './FinalCta.astro';
+import ForWhom from './ForWhom.astro';
+import Hero from './Hero.astro';
+import Honest from './Honest.astro';
+import HowItWorks from './HowItWorks.astro';
+import PainSolution from './PainSolution.astro';
+import TelegramSpotlight from './TelegramSpotlight.astro';
+
+interface Props {
+	lang: Lang;
+}
+
+const t = useTranslations(Astro.props.lang);
+---
+
+<Hero {t} />
+<PainSolution pain={t.pain} />
+<HowItWorks how={t.how} />
+<TelegramSpotlight spotlight={t.spotlight} />
+<Features features={t.features} />
+<ForWhom whom={t.whom} />
+<Honest honest={t.honest} />
+<Faq faq={t.faq} />
+<FinalCta cta={t.cta} />

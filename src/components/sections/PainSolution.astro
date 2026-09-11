@@ -1,0 +1,85 @@
+---
+import type { Dictionary } from '../../i18n';
+import Icon from '../Icon.astro';
+import type { IconName } from '../icons';
+
+interface Props {
+	pain: Dictionary['pain'];
+}
+
+const { pain } = Astro.props;
+
+const icons: readonly IconName[] = ['xCircle', 'messageSquare', 'palette'];
+---
+
+<section class="section" id="pain">
+	<div class="section-head reveal">
+		<p class="eyebrow">{pain.eyebrow}</p>
+		<h2 class="section-title">{pain.title}</h2>
+	</div>
+	<ul class="pain-list">
+		{
+			pain.items.map((item, index) => (
+				<li class="pain-row reveal">
+					<Icon icon={icons[index]!} size="20px" color="var(--text-dim)" />
+					<p class="pain-problem">{item.problem}</p>
+					<p class="pain-solution">{item.solution}</p>
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	/* Боль → решение читается как таблица сопоставления, а не как три
+	   центрированные карточки: одна и та же строка держит обе половины. */
+	.pain-list {
+		list-style: none;
+		border-top: 1px solid var(--border);
+	}
+
+	.pain-row {
+		display: grid;
+		grid-template-columns: 1.25rem minmax(0, 1fr) minmax(0, 1.1fr);
+		gap: 1rem 1.5rem;
+		align-items: start;
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.pain-row :global(svg) {
+		margin-top: 0.3rem;
+	}
+
+	.pain-problem {
+		color: var(--text-dim);
+		font-size: 1rem;
+	}
+
+	.pain-solution {
+		position: relative;
+		color: var(--text);
+		font-size: 1rem;
+		font-weight: 500;
+		padding-left: 1.6rem;
+	}
+
+	.pain-solution::before {
+		content: '→';
+		position: absolute;
+		left: 0;
+		color: var(--primary);
+		font-weight: 600;
+	}
+
+	@media (max-width: 56.24em) {
+		.pain-row {
+			grid-template-columns: 1.25rem minmax(0, 1fr);
+			gap: 0.5rem 1rem;
+		}
+
+		.pain-solution {
+			grid-column: 2;
+		}
+	}
+</style>
