@@ -1,30 +1,56 @@
-# Astro Starter Kit: Portfolio
+# Ujivo Chat Landing
+
+Лендинг сервиса [Ujivo Chat](https://ujivo.chat): посетитель пишет в чат на сайте, а команда получает сообщения и отвечает на них прямо из Telegram.
+
+## Возможности
+
+- адаптивный статический лендинг;
+- светлая и тёмная темы;
+- локализации на сербский, русский и английский языки;
+- интерактивные мокапы виджета и Telegram;
+- SEO-метаданные, canonical и `hreflang`;
+- доступная навигация и поддержка `prefers-reduced-motion`.
+
+## Стек
+
+- Astro 7;
+- TypeScript;
+- нативные CSS и JavaScript;
+- pnpm;
+- Node.js 22.12+.
+
+## Разработка
 
 ```sh
-pnpm create astro@latest -- --template portfolio
+pnpm install
+pnpm dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/portfolio)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/portfolio)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/portfolio/devcontainer.json)
+Сайт будет доступен на `http://localhost:4321`.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Команды
 
-![portfolio](https://user-images.githubusercontent.com/357379/210779178-a98f0fb7-6b1a-4068-894c-8e1403e26654.jpg)
+```sh
+pnpm dev       # локальный сервер
+pnpm build     # production-сборка в dist/
+pnpm preview   # локальный просмотр production-сборки
+pnpm astro ... # команды Astro CLI
+```
 
-## 🧞 Commands
+## Структура
 
-All commands are run from the root of the project, from a terminal:
+```text
+src/
+├── components/  # секции, общие компоненты и мокапы
+├── i18n/        # словари и логика локализации
+├── layouts/     # базовый layout
+├── pages/       # локализованные страницы
+├── scripts/     # клиентские скрипты
+└── styles/      # глобальные стили и дизайн-токены
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Основной язык — сербский (`/`). Русская и английская версии доступны по адресам `/ru/` и `/en/`.
 
-## 👀 Want to learn more?
+## Конфигурация
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+URL кабинета и сниппет установки виджета находятся в `src/config.ts`. Сейчас они содержат временные значения и должны быть заменены перед публикацией.
