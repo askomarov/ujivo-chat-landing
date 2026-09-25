@@ -7,8 +7,13 @@ export const LOGIN_URL = '/login';
  */
 export const CONTACT_URL = 'https://t.me/';
 
-/** Сниппет установки виджета. Не переводится. */
-export const WIDGET_SNIPPET = `<script src="…/widget.js"
+/** Прод-виджет на этом лендинге. */
+export const WIDGET_SRC = 'https://uzivo-chat-production.up.railway.app/widget.js';
+export const WIDGET_SITE_ID = 'da226746-b51e-4e5f-ad07-d040a8b7e9ff';
+export const WIDGET_SITE_KEY = 'f8bdeae5-7405-482c-80d7-b1f90572463e';
+
+/** Сниппет для блока «как это работает». Не переводится. */
+export const WIDGET_SNIPPET = `<script src="${WIDGET_SRC}"
   data-site-id="YOUR_SITE_ID"
   data-site-key="YOUR_SITE_KEY">
 </script>`;

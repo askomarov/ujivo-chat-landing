@@ -21,9 +21,24 @@ const { cta } = Astro.props;
 </section>
 
 <script>
-	document.getElementById('cta-contact-btn')?.addEventListener('click', () => {
-		console.log('hello');
-	});
+	function openUjivoChat() {
+		const widget = document.querySelector('ujivo-chat');
+		if (!widget) return;
+
+		// После деплоя widget с публичным API
+		if (typeof widget.open === 'function') {
+			widget.open();
+			return;
+		}
+
+		// Fallback: клик по FAB в Shadow DOM (текущий prod-бандл)
+		const root = widget.shadowRoot;
+		const panel = root?.querySelector('[data-panel]');
+		const toggle = root?.querySelector('[data-toggle]');
+		if (panel?.classList.contains('hidden')) toggle?.click();
+	}
+
+	document.getElementById('cta-contact-btn')?.addEventListener('click', openUjivoChat);
 </script>
 
 <style>
