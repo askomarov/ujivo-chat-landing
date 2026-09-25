@@ -292,8 +292,11 @@ const navLinks = [
 		transform: translateY(7px) rotate(45deg);
 	}
 
+	/* scaleX нужен: Safari/WebKit не репейнтит opacity-only
+	   рядом с соседними transform-слоями (пока DevTools не форснет paint). */
 	.burger.open span:nth-child(2) {
 		opacity: 0;
+		transform: scaleX(0);
 	}
 
 	.burger.open span:nth-child(3) {

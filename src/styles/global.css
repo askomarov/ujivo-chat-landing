@@ -278,6 +278,7 @@ summary:focus-visible {
 
 /* ===== СНИППЕТ КОДА ===== */
 .code-snippet {
+	max-width: 100%;
 	background: var(--bg-dark);
 	border-radius: var(--radius-sm);
 	padding: 0.8rem;
@@ -285,6 +286,7 @@ summary:focus-visible {
 }
 
 .code-snippet code {
+	display: block;
 	color: var(--code-text);
 	font-size: 0.78rem;
 	line-height: 1.5;
