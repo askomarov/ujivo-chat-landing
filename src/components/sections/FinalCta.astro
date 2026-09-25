@@ -1,5 +1,4 @@
 ---
-import { LOGIN_URL } from '../../config';
 import type { Dictionary } from '../../i18n';
 
 interface Props {
@@ -16,10 +15,16 @@ const { cta } = Astro.props;
 			<span class="accent-text">{cta.titleAccent}</span>
 		</h2>
 		<p class="cta-sub">{cta.subtitle}</p>
-		<a href={LOGIN_URL} class="btn btn-primary btn-lg">{cta.button}</a>
+		<button type="button" class="btn btn-primary btn-lg" id="cta-contact-btn">{cta.button}</button>
 		<p class="cta-note">{cta.note}</p>
 	</div>
 </section>
+
+<script>
+	document.getElementById('cta-contact-btn')?.addEventListener('click', () => {
+		console.log('hello');
+	});
+</script>
 
 <style>
 	.cta-section {

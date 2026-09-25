@@ -236,8 +236,8 @@ export const sr: Dictionary = {
 		titleLine: 'Ne gubi leadove',
 		titleAccent: 'dok otvaraš admin panel',
 		subtitle: 'Ubaci vidžet. Poveži Telegram. Odgovaraj sa telefona.',
-		button: 'Isprobaj besplatno',
-		note: 'Besplatno tokom MVP-a · Bez kartice',
+		button: 'Piši mi',
+		note: 'Želiš da isprobaš besplatno? Piši mi — napraviću ti nalog. Bez kartice.',
 	},
 
 	footer: {

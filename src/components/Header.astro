@@ -30,6 +30,8 @@ const navLinks = [
 
 	<div class="header-menu" id="headerMenu">
 		<nav class="nav-links" aria-label={t.a11y.mainNav}>
+			<span class="nav-bubble nav-bubble-active" aria-hidden="true"></span>
+			<span class="nav-bubble nav-bubble-hover" aria-hidden="true"></span>
 			{navLinks.map(({ href, label }) => <a {href}>{label}</a>)}
 		</nav>
 
@@ -154,34 +156,45 @@ const navLinks = [
 		box-shadow: var(--shadow-md);
 	}
 
-	.nav-links::before {
+	/* Внешний ободок как у Raul Dronca: слой за пилюлей, peek по inset. */
+	.nav-links::after {
 		content: '';
 		position: absolute;
-		inset: -1px;
+		inset: -3px;
 		border-radius: inherit;
-		padding: 1px;
 		background: var(--gradient-stroke);
-		mask:
-			linear-gradient(#000 0 0) content-box,
-			linear-gradient(#000 0 0);
-		mask-composite: exclude;
-		-webkit-mask:
-			linear-gradient(#000 0 0) content-box,
-			linear-gradient(#000 0 0);
-		-webkit-mask-composite: xor;
+		z-index: -1;
 		pointer-events: none;
 	}
 
+	.nav-bubble {
+		display: none;
+		pointer-events: none;
+		border-radius: var(--radius-pill);
+		top: anchor(top);
+		right: anchor(right);
+		bottom: anchor(bottom);
+		left: anchor(left);
+	}
+
 	.nav-links a {
+		position: relative;
+		z-index: 2;
 		padding: 0.4rem 0.9rem;
 		border-radius: var(--radius-pill);
 		font-size: 0.88rem;
 		font-weight: 500;
 		color: var(--text-dim);
 		white-space: nowrap;
-		transition:
-			color var(--theme-transition),
-			background-color var(--theme-transition);
+		transition: color var(--theme-transition);
+	}
+
+	.nav-links a::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
 	}
 
 	.nav-links a:hover {
@@ -192,6 +205,60 @@ const navLinks = [
 	.nav-links a[aria-current] {
 		color: #fff;
 		background: var(--primary-solid);
+	}
+
+	@supports (anchor-name: --nav-active) {
+		.nav-bubble {
+			display: block;
+			position: absolute;
+		}
+
+		.nav-bubble-active {
+			position-anchor: --nav-active;
+			z-index: 1;
+			background: linear-gradient(
+				180deg,
+				color-mix(in srgb, var(--primary-light) 55%, var(--primary-solid)),
+				var(--primary-solid)
+			);
+			box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 28%, transparent);
+		}
+
+		.nav-bubble-hover {
+			position-anchor: --nav-hover;
+			z-index: 0;
+			background: linear-gradient(180deg, var(--surface), var(--surface-2));
+			box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+		}
+
+		.nav-links a {
+			background: transparent;
+		}
+
+		.nav-links a:hover,
+		.nav-links a[aria-current] {
+			background: transparent;
+		}
+
+		.nav-links a[aria-current] {
+			anchor-name: --nav-active;
+			color: #fff;
+		}
+
+		/* Hover-якорь на ::before, как в референсе — bubble тянется за ним. */
+		.nav-links a:hover::before {
+			anchor-name: --nav-hover;
+		}
+
+		@media (prefers-reduced-motion: no-preference) {
+			.nav-bubble {
+				transition:
+					top 0.22s cubic-bezier(0.2, 0, 0, 1),
+					right 0.22s cubic-bezier(0.2, 0, 0, 1),
+					bottom 0.22s cubic-bezier(0.2, 0, 0, 1),
+					left 0.22s cubic-bezier(0.2, 0, 0, 1);
+			}
+		}
 	}
 
 	.header-actions {
@@ -275,7 +342,8 @@ const navLinks = [
 			box-shadow: none;
 		}
 
-		.nav-links::before {
+		.nav-links::after,
+		.nav-bubble {
 			display: none;
 		}
 
@@ -283,6 +351,15 @@ const navLinks = [
 			padding: 0.7rem 0.9rem;
 			font-size: 1rem;
 			border-radius: var(--radius-sm);
+		}
+
+		.nav-links a:hover {
+			background-color: var(--surface-2);
+		}
+
+		.nav-links a[aria-current] {
+			color: #fff;
+			background: var(--primary-solid);
 		}
 
 		.header-actions {
@@ -298,8 +375,14 @@ const navLinks = [
 	}
 
 	@media (forced-colors: active) {
+		.nav-bubble,
+		.nav-links::after {
+			display: none;
+		}
+
 		.nav-links a[aria-current] {
 			background: SelectedItem;
+			color: SelectedItemText;
 		}
 	}
 </style>

@@ -236,8 +236,8 @@ export const en: Dictionary = {
 		titleLine: 'Don’t lose leads',
 		titleAccent: 'while opening a dashboard',
 		subtitle: 'Paste the widget. Connect Telegram. Reply from your phone.',
-		button: 'Try it free',
-		note: 'Free during MVP · No card required',
+		button: 'Message me',
+		note: 'Want to try it free? Message me and I’ll create your account. No card required.',
 	},
 
 	footer: {
