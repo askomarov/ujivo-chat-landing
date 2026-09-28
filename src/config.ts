@@ -9,8 +9,8 @@ export const CONTACT_URL = 'https://t.me/';
 
 /** Прод-виджет на этом лендинге. */
 export const WIDGET_SRC = 'https://uzivo-chat-production.up.railway.app/widget.js';
-export const WIDGET_SITE_ID = 'da226746-b51e-4e5f-ad07-d040a8b7e9ff';
-export const WIDGET_SITE_KEY = 'f8bdeae5-7405-482c-80d7-b1f90572463e';
+export const WIDGET_SITE_ID = '79c81c62-9475-4298-8d39-3ea0f00d20d4';
+export const WIDGET_SITE_KEY = 'ae2dc329-f660-408f-8937-10b332d513da';
 
 /** Сниппет для блока «как это работает». Не переводится. */
 export const WIDGET_SNIPPET = `<script src="${WIDGET_SRC}"
