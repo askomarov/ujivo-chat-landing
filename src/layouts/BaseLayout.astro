@@ -2,7 +2,7 @@
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import MainHead from '../components/MainHead.astro';
-import { WIDGET_SITE_ID, WIDGET_SITE_KEY, WIDGET_SRC } from '../config';
+import { WIDGET_API_URL, WIDGET_SITE_ID, WIDGET_SITE_KEY, WIDGET_SRC } from '../config';
 import { HTML_LANG, useTranslations, type Lang } from '../i18n';
 
 interface Props {
@@ -42,6 +42,7 @@ const t = useTranslations(lang);
 			src={WIDGET_SRC}
 			data-site-id={WIDGET_SITE_ID}
 			data-site-key={WIDGET_SITE_KEY}
+			data-api-url={WIDGET_API_URL}
 		></script>
 	</body>
 </html>
