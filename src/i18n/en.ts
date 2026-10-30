@@ -156,7 +156,7 @@ export const en: Dictionary = {
 			},
 			{
 				title: 'Visitor contact',
-				text: 'A form on the first message — fill or skip. Details go to the dashboard and Telegram; later there’s a button to send the contact.',
+				text: 'A form on the first message — fill or skip. The contact is pinned to the conversation card, and the Telegram topic is renamed after the visitor.',
 			},
 			{
 				title: 'Colours that match',
@@ -198,7 +198,7 @@ export const en: Dictionary = {
 
 	honest: {
 		title: 'Honestly, what’s missing so far',
-		text: 'Right now: widget + Telegram + dashboard, one site per account. No AI agent, no WhatsApp or Max, pricing isn’t ready. It’s an MVP — but it’s live and it works.',
+		text: 'Right now: widget + Telegram + dashboard, one site per account. No AI agent, no WhatsApp or Max, no end-to-end encryption, pricing isn’t ready. It’s an MVP — but it’s live and it works.',
 	},
 
 	faq: {
@@ -227,7 +227,12 @@ export const en: Dictionary = {
 			{
 				question: 'What about visitor data?',
 				answer:
-					'On the first message, visitors see a contact form (name, email, phone) — fill it now or skip. If they submit it, the contact lands in the dashboard and Telegram. If not, the widget has a button to send details later.',
+					'On the first message, visitors see a contact form (name, email, phone) — fill it in or skip, with a button in the widget to send it later. The contact is saved to the visitor card, not the chat history, and arrives in Telegram as a separate message. Inactive conversations are deleted automatically after 90 days.',
+			},
+			{
+				question: 'Are chats encrypted? What if the site gets hacked?',
+				answer:
+					'Everything travels over HTTPS only. In the dashboard, only the site owner sees the history; a visitor sees only their own conversation. There’s no Signal-style end-to-end encryption — on purpose: otherwise you couldn’t reply from Telegram and the dashboard. Jivo, Crisp and Intercom work the same way. To keep less data around, old conversations are deleted after 90 days; the copy in your Telegram group stays under your control.',
 			},
 		],
 	},
@@ -237,7 +242,7 @@ export const en: Dictionary = {
 		titleAccent: 'while opening a dashboard',
 		subtitle: 'Paste the widget. Connect Telegram. Reply from your phone.',
 		button: 'Message me',
-		note: 'Want to try it free? Message me and I’ll create your account. No card required.',
+		note: 'Want to try? Just message me and I’ll set you up with a free account.',
 	},
 
 	footer: {

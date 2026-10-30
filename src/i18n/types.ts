@@ -134,7 +134,7 @@ export interface Dictionary {
 	faq: {
 		eyebrow: string;
 		title: string;
-		items: FixedArray<FaqItem, 5>;
+		items: FixedArray<FaqItem, 6>;
 	};
 
 	cta: {

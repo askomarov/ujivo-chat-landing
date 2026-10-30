@@ -1,6 +1,7 @@
 ---
 import type { Dictionary } from '../../i18n';
 import Icon from '../Icon.astro';
+import Mascot from '../Mascot.astro';
 import BrowserWidget from '../mockups/BrowserWidget.astro';
 import TelegramPanel from '../mockups/TelegramPanel.astro';
 
@@ -49,19 +50,23 @@ const { t } = Astro.props;
 			</div>
 		</div>
 	</div>
+
+	<div class="hero-mascot">
+		<Mascot size={128} label="Ujivo" />
+	</div>
 </section>
 
 <style>
 	.hero {
 		position: relative;
 		padding: 8rem 2rem 5rem;
-		overflow: hidden;
 	}
 
 	.hero-bg {
 		position: absolute;
 		inset: 0;
 		z-index: 0;
+		overflow: hidden;
 		background:
 			radial-gradient(circle at 78% 24%, var(--cherry-glow-strong), transparent 24rem),
 			radial-gradient(circle at 12% 68%, var(--cherry-glow), transparent 28rem);
@@ -176,6 +181,20 @@ const { t } = Astro.props;
 
 	.hero-visual {
 		position: relative;
+	}
+
+	.hero-mascot {
+		position: fixed;
+		left: max(1rem, env(safe-area-inset-left));
+		bottom: max(1rem, env(safe-area-inset-bottom));
+		z-index: 40;
+		pointer-events: auto;
+	}
+
+	@media (max-width: 500px) {
+		.hero-mascot {
+			display: none;
+		}
 	}
 
 	.mockup-container {

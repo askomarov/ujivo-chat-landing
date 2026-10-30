@@ -1,0 +1,280 @@
+---
+interface Props {
+	/** 3×3 sheet направлений взгляда */
+	directions?: string;
+	/** 3×3 sheet реакций (пока можно ту же картинку) */
+	reactions?: string;
+	size?: number;
+	class?: string;
+	/** Имя для aria-label */
+	label?: string;
+}
+
+const {
+	directions = '/assets/backgrounds/robot.webp',
+	reactions = '/assets/backgrounds/emotions.webp',
+	size = 140,
+	class: className,
+	label = 'Ujivo',
+} = Astro.props;
+---
+
+<page-mascot
+	class:list={['mascot', className]}
+	style={`--mascot-size: ${size}px; --mascot-directions: url(${JSON.stringify(directions)}); --mascot-reactions: url(${JSON.stringify(reactions)});`}
+	data-label={label}
+>
+	<button type="button" aria-label={`Boop the ${label}`}>
+		<span class="squash">
+			<span class="layer directions" data-layer="directions"></span>
+			<span class="layer reactions" data-layer="reactions"></span>
+		</span>
+	</button>
+</page-mascot>
+
+<style>
+	.mascot {
+		display: block;
+		flex-shrink: 0;
+		width: var(--mascot-size, 140px);
+		height: var(--mascot-size, 140px);
+	}
+
+	button {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		appearance: none;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.squash {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		transform-origin: 50% 78%;
+	}
+
+	.layer {
+		position: absolute;
+		inset: 0;
+		background-size: 300% 300%;
+		background-repeat: no-repeat;
+		background-position: 50% 50%;
+		pointer-events: none;
+	}
+
+	.directions {
+		background-image: var(--mascot-directions);
+	}
+
+	.reactions {
+		background-image: var(--mascot-reactions);
+		opacity: 0;
+	}
+
+	.mascot[data-reacting] .directions {
+		opacity: 0;
+	}
+
+	.mascot[data-reacting] .reactions {
+		opacity: 1;
+	}
+</style>
+
+<script>
+	const DIRECTIONS = [
+		'up-left',
+		'up',
+		'up-right',
+		'left',
+		'center',
+		'right',
+		'down-left',
+		'down',
+		'down-right',
+	] as const;
+
+	const REACTIONS = [
+		'blink',
+		'heart',
+		'sparkle',
+		'surprised',
+		'wink',
+		'bashful',
+		'sleepy',
+		'dizzy',
+		'delighted',
+	] as const;
+
+	type Direction = (typeof DIRECTIONS)[number];
+	type Reaction = (typeof REACTIONS)[number];
+
+	const CLOCKWISE: Direction[] = [
+		'right',
+		'down-right',
+		'down',
+		'down-left',
+		'left',
+		'up-left',
+		'up',
+		'up-right',
+	];
+
+	const SECTOR = (Math.PI * 2) / CLOCKWISE.length;
+	const HYSTERESIS = 0.12;
+	const DEAD_ZONE = 70;
+
+	const PAYOFFS: Reaction[] = ['heart', 'sparkle', 'delighted'];
+	const BOOP_PAYOFF = 120;
+	const BOOP_END = 560;
+	const SQUASH_MS = 420;
+	const DIZZY_AFTER = 4;
+	const DIZZY_WINDOW = 1600;
+	const DIZZY_END = 1100;
+
+	const SQUASH: Keyframe[] = [
+		{ transform: 'scale(1, 1)', easing: 'ease-in' },
+		{ transform: 'scale(1.10, 0.86)', offset: 0.18, easing: 'ease-out' },
+		{ transform: 'scale(0.95, 1.08)', offset: 0.45, easing: 'ease-in-out' },
+		{ transform: 'scale(1.03, 0.97)', offset: 0.72, easing: 'ease-in-out' },
+		{ transform: 'scale(1, 1)' },
+	];
+
+	function cell(index: number) {
+		return `${(index % 3) * 50}% ${Math.floor(index / 3) * 50}%`;
+	}
+
+	function wrap(angle: number) {
+		return Math.atan2(Math.sin(angle), Math.cos(angle));
+	}
+
+	class PageMascot extends HTMLElement {
+		#button: HTMLButtonElement | null = null;
+		#squash: HTMLElement | null = null;
+		#directionsLayer: HTMLElement | null = null;
+		#reactionsLayer: HTMLElement | null = null;
+		#timers: number[] = [];
+		#boops = { count: 0, at: 0 };
+		#sector = -1;
+		#pointer: { x: number; y: number } | null = null;
+		#aimCleanup: (() => void) | null = null;
+
+		connectedCallback() {
+			this.#button = this.querySelector('button');
+			this.#squash = this.querySelector('.squash');
+			this.#directionsLayer = this.querySelector('[data-layer="directions"]');
+			this.#reactionsLayer = this.querySelector('[data-layer="reactions"]');
+
+			this.#setDirection('center');
+			this.#setReaction(null);
+
+			this.#button?.addEventListener('click', this.#boop);
+			this.#setupAim();
+		}
+
+		disconnectedCallback() {
+			this.#button?.removeEventListener('click', this.#boop);
+			this.#aimCleanup?.();
+			this.#clearTimers();
+		}
+
+		#setupAim() {
+			if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+			const onPointerMove = (event: PointerEvent) => {
+				this.#pointer = { x: event.clientX, y: event.clientY };
+				this.#aim();
+			};
+
+			window.addEventListener('pointermove', onPointerMove, { passive: true });
+			window.addEventListener('scroll', this.#aim, { passive: true });
+
+			this.#aimCleanup = () => {
+				window.removeEventListener('pointermove', onPointerMove);
+				window.removeEventListener('scroll', this.#aim);
+			};
+		}
+
+		#aim = () => {
+			const button = this.#button;
+			if (!button || !this.#pointer) return;
+
+			const box = button.getBoundingClientRect();
+			const dx = this.#pointer.x - (box.left + box.width / 2);
+			const dy = this.#pointer.y - (box.top + box.height / 2);
+
+			if (Math.hypot(dx, dy) < DEAD_ZONE) {
+				this.#sector = -1;
+				this.#setDirection('center');
+				return;
+			}
+
+			const angle = Math.atan2(dy, dx);
+			if (
+				this.#sector !== -1 &&
+				Math.abs(wrap(angle - this.#sector * SECTOR)) < SECTOR / 2 + HYSTERESIS
+			) {
+				return;
+			}
+
+			this.#sector = (Math.round(angle / SECTOR) + CLOCKWISE.length) % CLOCKWISE.length;
+			this.#setDirection(CLOCKWISE[this.#sector]);
+		};
+
+		#setDirection(direction: Direction) {
+			if (!this.#directionsLayer) return;
+			this.#directionsLayer.style.backgroundPosition = cell(DIRECTIONS.indexOf(direction));
+		}
+
+		#setReaction(reaction: Reaction | null) {
+			this.toggleAttribute('data-reacting', reaction !== null);
+			if (!this.#reactionsLayer) return;
+			this.#reactionsLayer.style.backgroundPosition = cell(
+				REACTIONS.indexOf(reaction ?? 'blink'),
+			);
+		}
+
+		#clearTimers() {
+			this.#timers.forEach((id) => window.clearTimeout(id));
+			this.#timers = [];
+		}
+
+		#boop = () => {
+			this.#clearTimers();
+
+			const later = (ms: number, next: Reaction | null) => {
+				this.#timers.push(window.setTimeout(() => this.#setReaction(next), ms));
+			};
+
+			const now = Date.now();
+			const boops = this.#boops;
+			boops.count = now - boops.at < DIZZY_WINDOW ? boops.count + 1 : 1;
+			boops.at = now;
+
+			if (boops.count >= DIZZY_AFTER) {
+				boops.count = 0;
+				this.#setReaction('dizzy');
+				later(DIZZY_END, null);
+			} else {
+				this.#setReaction('blink');
+				later(BOOP_PAYOFF, PAYOFFS[(boops.count - 1) % PAYOFFS.length]);
+				later(BOOP_END, null);
+			}
+
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+			this.#squash?.animate(SQUASH, { duration: SQUASH_MS, easing: 'linear' });
+		};
+	}
+
+	if (!customElements.get('page-mascot')) {
+		customElements.define('page-mascot', PageMascot);
+	}
+</script>

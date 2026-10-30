@@ -156,7 +156,7 @@ export const sr: Dictionary = {
 			},
 			{
 				title: 'Kontakt posetioca',
-				text: 'Forma pri prvoj poruci — može da popuni ili preskoči. Podaci idu u kabinet i Telegram; kasnije — dugme za slanje kontakta.',
+				text: 'Forma pri prvoj poruci — popuni ili preskoči. Kontakt se vezuje za karticu dijaloga, a tema u Telegramu dobija ime posetioca.',
 			},
 			{
 				title: 'Boje pod sajt',
@@ -198,7 +198,7 @@ export const sr: Dictionary = {
 
 	honest: {
 		title: 'Iskreno o tome čega još nema',
-		text: 'Sada: vidžet + Telegram + kabinet, jedan sajt po nalogu. Nema AI agenta, nema WhatsApp i Max, tarife još nisu spremne. MVP — ali živi i radi.',
+		text: 'Sada: vidžet + Telegram + kabinet, jedan sajt po nalogu. Nema AI agenta, nema WhatsApp i Max, nema end-to-end šifrovanja, tarife još nisu spremne. MVP — ali živi i radi.',
 	},
 
 	faq: {
@@ -227,7 +227,12 @@ export const sr: Dictionary = {
 			{
 				question: 'Šta je sa podacima posetilaca?',
 				answer:
-					'Pri prvoj poruci posetilac vidi formu (ime, email, telefon) — može odmah da popuni ili da preskoči. Ako popuni — kontakt ide u kabinet i Telegram. Ako ne — kasnije u vidžetu postoji dugme da pošalje podatke.',
+					'Pri prvoj poruci posetilac vidi formu (ime, email, telefon) — može da popuni ili preskoči, a kasnije u vidžetu postoji dugme. Kontakt se čuva u kartici posetioca, ne u istoriji prepiske, i stiže u Telegram kao posebna poruka. Neaktivni dijalozi se automatski brišu posle 90 dana.',
+			},
+			{
+				question: 'Da li je prepiska šifrovana? Šta ako sajt bude hakovan?',
+				answer:
+					'Sve ide isključivo preko HTTPS-a. Istoriju u kabinetu vidi samo vlasnik sajta, a posetilac samo svoj dijalog. End-to-end šifrovanja kao u Signalu nema — namerno: inače ne bi mogao da odgovaraš iz Telegrama i kabineta. Isto rade Jivo, Crisp i Intercom. Da bi se čuvalo manje podataka, stari dijalozi se brišu posle 90 dana; kopija u tvojoj Telegram grupi ostaje pod tvojom kontrolom.',
 			},
 		],
 	},

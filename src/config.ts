@@ -1,5 +1,5 @@
-/** URL веб-кабинета. Пока заглушка — заменить на реальный адрес. */
-export const LOGIN_URL = '/login';
+/** URL веб-кабинета. */
+export const LOGIN_URL = 'https://admin.ujivo.com/login';
 
 /**
  * Куда писать за доступом (Telegram / email / форма).
