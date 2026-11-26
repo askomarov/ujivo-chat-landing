@@ -18,7 +18,7 @@ const { faq } = Astro.props;
 		{
 			faq.items.map((item) => (
 				<details class="faq-item reveal" name="faq">
-					<summary class="faq-q">
+					<summary class="faq-q" data-sound="hi75-soft">
 						<span>{item.question}</span>
 						<span class="faq-chevron">
 							<Icon icon="chevronDown" size="18px" />

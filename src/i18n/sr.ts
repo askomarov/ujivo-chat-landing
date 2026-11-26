@@ -22,6 +22,7 @@ export const sr: Dictionary = {
 	a11y: {
 		menu: 'Meni',
 		theme: 'Tamna tema',
+		sound: 'Zvučni efekti',
 		language: 'Jezik',
 		send: 'Pošalji',
 		skipToContent: 'Preskoči na sadržaj',

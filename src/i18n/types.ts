@@ -62,6 +62,7 @@ export interface Dictionary {
 	a11y: {
 		menu: string;
 		theme: string;
+		sound: string;
 		language: string;
 		send: string;
 		skipToContent: string;

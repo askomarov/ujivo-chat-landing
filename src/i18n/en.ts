@@ -22,6 +22,7 @@ export const en: Dictionary = {
 	a11y: {
 		menu: 'Menu',
 		theme: 'Dark theme',
+		sound: 'Sound effects',
 		language: 'Language',
 		send: 'Send',
 		skipToContent: 'Skip to content',

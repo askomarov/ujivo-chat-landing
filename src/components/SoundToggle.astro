@@ -1,0 +1,155 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+	label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<sound-toggle>
+	<button type="button" aria-pressed="true">
+		<span class="sr-only">{label}</span>
+		<span class="icon on"><Icon icon="volume" /></span>
+		<span class="icon off"><Icon icon="volumeX" /></span>
+	</button>
+</sound-toggle>
+<script is:inline>
+	try {
+		if (localStorage.getItem('ujivo:sound') === '0') {
+			document.querySelector('sound-toggle button')?.setAttribute('aria-pressed', 'false');
+		}
+	} catch {
+		/* localStorage недоступен */
+	}
+</script>
+
+<style>
+	button {
+		position: relative;
+		display: flex;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-pill);
+		padding: 0;
+		background-color: var(--surface);
+		transition:
+			background-color var(--theme-transition),
+			border-color var(--theme-transition);
+	}
+
+	button:hover {
+		border-color: var(--border-hover);
+	}
+
+	.icon {
+		z-index: 1;
+		position: relative;
+		display: flex;
+		padding: 0.35rem;
+		width: 1.7rem;
+		height: 1.7rem;
+		font-size: 1rem;
+		color: var(--text-mute);
+	}
+
+	.icon.on::before {
+		content: '';
+		z-index: -1;
+		position: absolute;
+		inset: 0;
+		background: var(--primary-solid);
+		border-radius: var(--radius-pill);
+	}
+
+	button[aria-pressed='false'] .icon.on::before {
+		transform: translateX(100%);
+	}
+
+	button[aria-pressed='true'] .icon.on,
+	button[aria-pressed='false'] .icon.off {
+		color: #fff;
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.icon,
+		.icon.on::before {
+			transition:
+				transform var(--theme-transition),
+				color var(--theme-transition);
+		}
+	}
+
+	@media (forced-colors: active) {
+		.icon.on::before {
+			background: SelectedItem;
+		}
+	}
+</style>
+
+<script>
+	import { CLICK_SOUND, isMuted, playClick, setMuted } from '../scripts/ui-sounds';
+
+	class SoundToggle extends HTMLElement {
+		connectedCallback() {
+			const button = this.querySelector('button');
+			if (!button || button.dataset.bound === 'true') return;
+			button.dataset.bound = 'true';
+
+			let fromPointer = false;
+
+			const paint = (soundOn: boolean) => {
+				button.setAttribute('aria-pressed', String(soundOn));
+			};
+
+			const releasePointer = () => {
+				window.removeEventListener('pointerup', releasePointer);
+				window.removeEventListener('pointercancel', releasePointer);
+				setTimeout(() => {
+					fromPointer = false;
+				});
+			};
+
+			paint(!isMuted());
+
+			button.addEventListener('pointerdown', (event) => {
+				if (event.button !== 0) return;
+				fromPointer = true;
+				window.addEventListener('pointerup', releasePointer);
+				window.addEventListener('pointercancel', releasePointer);
+
+				if (isMuted()) {
+					setMuted(false);
+					paint(true);
+					playClick(CLICK_SOUND);
+					return;
+				}
+
+				// Отпускание ещё слышно: mute ставится на pointerup, после release.
+				playClick(CLICK_SOUND);
+				paint(false);
+				const mute = () => {
+					window.removeEventListener('pointerup', mute);
+					window.removeEventListener('pointercancel', mute);
+					setMuted(true);
+				};
+				window.addEventListener('pointerup', mute);
+				window.addEventListener('pointercancel', mute);
+			});
+
+			button.addEventListener('click', () => {
+				if (fromPointer) {
+					fromPointer = false;
+					return;
+				}
+				const soundOn = isMuted();
+				setMuted(!soundOn);
+				paint(soundOn);
+			});
+		}
+	}
+
+	if (!customElements.get('sound-toggle')) {
+		customElements.define('sound-toggle', SoundToggle);
+	}
+</script>

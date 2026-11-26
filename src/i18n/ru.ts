@@ -22,6 +22,7 @@ export const ru: Dictionary = {
 	a11y: {
 		menu: 'Меню',
 		theme: 'Тёмная тема',
+		sound: 'Звуковые эффекты',
 		language: 'Язык',
 		send: 'Отправить',
 		skipToContent: 'Перейти к содержимому',

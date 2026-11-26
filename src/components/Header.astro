@@ -4,6 +4,7 @@ import { LOGIN_URL } from '../config';
 import { useTranslations, type Lang } from '../i18n';
 import Icon from './Icon.astro';
 import LangSwitch from './LangSwitch.astro';
+import SoundToggle from './SoundToggle.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
@@ -38,7 +39,8 @@ const navLinks = [
 		<div class="header-actions">
 			<LangSwitch {lang} {path} />
 			<ThemeToggle label={t.a11y.theme} />
-			<a href="#cta" class="btn btn-primary btn-sm">{t.actions.try}</a>
+			<SoundToggle label={t.a11y.sound} />
+			<a href="#cta" class="btn btn-primary btn-sm" data-sound="hi75-soft">{t.actions.try}</a>
 		</div>
 	</div>
 
@@ -46,6 +48,7 @@ const navLinks = [
 		class="burger"
 		id="burger"
 		type="button"
+		data-sound="hi75-soft"
 		aria-label={t.a11y.menu}
 		aria-expanded="false"
 		aria-controls="headerMenu"

@@ -24,7 +24,7 @@ const {
 	style={`--mascot-size: ${size}px; --mascot-directions: url(${JSON.stringify(directions)}); --mascot-reactions: url(${JSON.stringify(reactions)});`}
 	data-label={label}
 >
-	<button type="button" aria-label={`Boop the ${label}`}>
+	<button type="button" data-sound="popper-dice" aria-label={`Boop the ${label}`}>
 		<span class="squash">
 			<span class="layer directions" data-layer="directions"></span>
 			<span class="layer reactions" data-layer="reactions"></span>

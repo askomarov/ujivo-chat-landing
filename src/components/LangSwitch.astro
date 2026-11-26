@@ -22,7 +22,7 @@ const t = useTranslations(lang);
 
 <lang-switch data-storage-key={LANG_STORAGE_KEY}>
 	<details>
-		<summary aria-label={`${t.a11y.language}: ${LOCALE_LABELS[lang]}`}>
+		<summary aria-label={`${t.a11y.language}: ${LOCALE_LABELS[lang]}`} data-sound="hi75-soft">
 			<span>{lang.toUpperCase()}</span>
 			<span class="chevron">
 				<Icon icon="chevronDown" size="0.85rem" />
@@ -37,6 +37,7 @@ const t = useTranslations(lang);
 							hreflang={HTML_LANG[locale]}
 							lang={HTML_LANG[locale]}
 							data-locale={locale}
+							data-sound="hi75-soft"
 							aria-current={locale === lang ? 'true' : undefined}
 						>
 							<span>{LOCALE_LABELS[locale]}</span>

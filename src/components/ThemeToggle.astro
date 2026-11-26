@@ -80,6 +80,8 @@ const { label } = Astro.props;
 </style>
 
 <script>
+	import { playPress, THEME_OFF_SOUND, THEME_ON_SOUND } from '../scripts/ui-sounds';
+
 	class ThemeToggle extends HTMLElement {
 		constructor() {
 			super();
@@ -91,6 +93,11 @@ const { label } = Astro.props;
 				button.setAttribute('aria-pressed', String(dark));
 			};
 
+			button.addEventListener('pointerdown', (event) => {
+				if (event.button !== 0) return;
+				const goingDark = button.getAttribute('aria-pressed') !== 'true';
+				playPress(goingDark ? THEME_ON_SOUND : THEME_OFF_SOUND);
+			});
 			button.addEventListener('click', () => setTheme(!this.isDark()));
 			setTheme(this.isDark());
 		}
